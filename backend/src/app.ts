@@ -63,7 +63,12 @@ const main = async () => {
       secret: process.env.COOKIE_SECRET,
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 60000 * 60 * 24 * 7 },
+      cookie: {
+        maxAge: 60000 * 60 * 24 * 7,
+        httpOnly: true,
+        sameSite: "lax",
+        domain: "renzynx.space",
+      },
       store: new TypeormStore().connect(sessionRepository),
     })
   );
