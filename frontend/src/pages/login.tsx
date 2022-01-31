@@ -26,9 +26,7 @@ export const Login = () => {
       />
       <div
         onClick={() => {
-          data?.user?.uid && !error
-            ? nav("/dashboard")
-            : nav("https://api.renzynx.space/auth/login");
+          nav("https://api.renzynx.space/auth/login");
         }}
         className="text-xl px-10 py-3 ring-1 ring-offset-black hover:bg-slate-800 cursor-pointer flex flex-row gap-3 rounded-md lg:hover:scale-105 duration-200 ease-linear hover:ring-red-400"
       >
