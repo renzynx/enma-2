@@ -2,6 +2,7 @@ import { useQuery } from "@apollo/client";
 import { Routes, Route } from "react-router-dom";
 import { Loading } from "./components/layouts/Loading";
 import { UserQuery } from "./lib/graphql/query";
+import { NotFound } from "./pages/404";
 import { Category } from "./pages/category";
 import { Dashboard } from "./pages/dashboard";
 import { Login } from "./pages/login";
@@ -25,7 +26,7 @@ function App() {
         <>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="*" element={<p>Not Found</p>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </>
       )}
