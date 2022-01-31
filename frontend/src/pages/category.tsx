@@ -15,7 +15,9 @@ export const Category = () => {
 
   if (loading) return <Loading />;
 
-  return data && data.config && !error && id ? (
+  if (error) return <Navigate replace to="/dashboard" />;
+
+  return data && data.config ? (
     <div className="text-slate-800 bg-slate-900">
       <Navbar />
       <div className="grid lg:grid-flow-col md:grid-flow-row gap-5 w-[80%] mx-auto my-20">
