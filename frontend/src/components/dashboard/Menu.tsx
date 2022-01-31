@@ -13,7 +13,7 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-20 my-20">
       {included.map((item, index) => (
         <div
-          className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-100 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-2 ring-black ring-opacity-5 focus:outline-none"
+          className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-2 ring-black ring-opacity-5 focus:outline-none"
           key={index}
           onClick={() => click(item.id)}
         >
@@ -31,7 +31,7 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
       ))}
       {excluded.map((item, index) => (
         <div
-          className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-100 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
           key={index}
           onClick={() =>
             (window.location.href =
