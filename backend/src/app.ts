@@ -20,6 +20,7 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/user";
 import { GuildResolver } from "./resolvers/guild";
 import { GuildConfig } from "./entities/guild_config";
+import { __prod__ } from "./lib/constants";
 
 const app = express();
 const server = http.createServer(app);
@@ -67,6 +68,7 @@ const main = async () => {
         maxAge: 60000 * 60 * 24 * 7,
         httpOnly: true,
         sameSite: "lax",
+        secure: __prod__,
         domain: "renzynx.space",
       },
       store: new TypeormStore().connect(sessionRepository),
