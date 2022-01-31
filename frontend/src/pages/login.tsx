@@ -1,6 +1,5 @@
-import { useQuery } from "@apollo/client";
 import { FaDiscord } from "react-icons/fa";
-import { Loading } from "../components/layouts/Loading";
+import { client } from "..";
 import { UserQuery } from "../lib/graphql/query";
 import { UserConfig } from "../lib/types";
 
@@ -13,10 +12,6 @@ export const Login = () => {
     return (window.location.href = route);
   };
 
-  const { data, loading, error } = useQuery<UserCFG>(UserQuery);
-
-  if (loading) return <Loading />;
-
   return (
     <div className="flex items-center justify-center w-screen min-h-screen flex-col gap-5">
       <img
@@ -25,8 +20,14 @@ export const Login = () => {
         alt="enma"
       />
       <div
-        onClick={() => {
-          nav("https://api.renzynx.space/auth/login");
+        onClick={async () => {
+          const { data } = await client.query<UserCFG>({
+            query: UserQuery,
+          });
+
+          return data.user?.uid
+            ? nav("/dashboard")
+            : nav("https://api.renzynx.space/auth/login");
         }}
         className="text-xl px-10 py-3 ring-1 ring-offset-black hover:bg-slate-800 cursor-pointer flex flex-row gap-3 rounded-md lg:hover:scale-105 duration-200 ease-linear hover:ring-red-400"
       >
