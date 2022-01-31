@@ -66,10 +66,6 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         maxAge: 60000 * 60 * 24 * 7,
-        httpOnly: true,
-        sameSite: "lax",
-        secure: __prod__,
-        domain: "renzynx.space",
       },
       store: new TypeormStore().connect(sessionRepository),
     })
