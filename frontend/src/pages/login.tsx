@@ -26,7 +26,7 @@ export const Login = () => {
       />
       <div
         onClick={() => {
-          return data?.user?.uid && !error
+          data?.user?.uid && !error
             ? nav("/dashboard")
             : nav("https://api.renzynx.space/auth/login");
         }}
