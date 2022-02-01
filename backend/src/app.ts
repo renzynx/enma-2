@@ -55,8 +55,10 @@ const main = async () => {
   const app = express();
   const server = http.createServer(app);
 
+  const urls = process.env.DASHBOARD_URL.split(" ");
+
   const io = new Server(server, {
-    cors: { origin: [process.env.DASHBOARD_URL] },
+    cors: { origin: urls },
   });
 
   io.on("connection", (socket) => {
@@ -69,7 +71,7 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: [process.env.DASHBOARD_URL],
+      origin: urls,
       credentials: true,
     })
   );
