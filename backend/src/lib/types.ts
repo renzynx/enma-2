@@ -1,4 +1,6 @@
 import type { Request, Response } from "express";
+import type { Server } from "socket.io";
+import type { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { Field, Int, ObjectType } from "type-graphql";
 import type { UserConfig } from "../entities/user_config";
 
@@ -9,6 +11,7 @@ interface Extended extends Request {
 export type Context = {
   req: Extended;
   res: Response;
+  websocket: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 };
 
 export type PartialGuild = {

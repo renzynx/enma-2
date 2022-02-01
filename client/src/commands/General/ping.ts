@@ -4,7 +4,8 @@ import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
-	description: 'ping pong'
+	description: 'ping pong',
+	detailedDescription: 'ping - Get the bot latency'
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {

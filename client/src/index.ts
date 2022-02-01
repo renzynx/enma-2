@@ -81,7 +81,6 @@ container.manager = new Manager({
 const main = async () => {
 	try {
 		socket.on('updatePrefix', async (data: GuildConfig) => {
-			console.log(data);
 			container.config.set(data.guild_id, data);
 		});
 

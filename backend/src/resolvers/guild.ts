@@ -11,12 +11,9 @@ import { getBotGuilds, getGuildChannels, getUserGuilds } from "../lib/api";
 import { Context, GuildChannel, MutualGuild, PartialGuild } from "../lib/types";
 import { isAuth } from "../middleware/isAuth";
 import { GuildConfig } from "../entities/guild_config";
-import { websocket } from "../app";
 
 @Resolver()
 export class GuildResolver {
-  private readonly ws = websocket;
-
   @Query((_returns) => MutualGuild, { nullable: true })
   @UseMiddleware(isAuth)
   async guilds(@Ctx() { req }: Context) {
@@ -65,7 +62,11 @@ export class GuildResolver {
 
   @Mutation(() => GuildConfig, { nullable: true })
   @UseMiddleware(isAuth)
-  async prefix(@Arg("id") id: string, @Arg("prefix") prefix: string) {
+  async prefix(
+    @Arg("id") id: string,
+    @Arg("prefix") prefix: string,
+    @Ctx() { websocket }: Context
+  ) {
     const guildRepository = getRepository(GuildConfig);
 
     const guild = await guildRepository.findOne({ guild_id: id });
@@ -76,7 +77,7 @@ export class GuildResolver {
         prefix,
       });
 
-      this.ws.emit("updatePrefix", saved);
+      websocket.emit("updatePrefix", saved);
 
       return saved;
     }
