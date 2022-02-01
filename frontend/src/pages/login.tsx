@@ -27,7 +27,7 @@ export const Login = () => {
 
           return data.user?.uid
             ? nav("/dashboard")
-            : nav("http://localhost:8080/auth/login");
+            : nav(`${process.env.REACT_APP_API_URL}/auth/login`);
         }}
         className="text-xl px-10 py-3 ring-1 ring-offset-black hover:bg-slate-800 cursor-pointer flex flex-row gap-3 rounded-md lg:hover:scale-105 duration-200 ease-linear hover:ring-red-400"
       >
