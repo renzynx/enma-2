@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react"
-import { Switch } from "@headlessui/react"
+import { useEffect, useState } from "react";
+import { Switch } from "@headlessui/react";
 
 export const Switcher = () => {
-  const [enabled, setEnabled] = useState(false)
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    const root = document.querySelector("html")
-    enabled ? root?.classList.add("dark") : root?.classList.remove("dark")
-  }, [enabled])
+    const root = document.querySelector("html");
+    enabled ? root?.classList.add("dark") : root?.classList.remove("dark");
+  }, [enabled]);
 
   return (
     <div className="py-16 mr-6 flex-row flex gap-5 dark:text-gray-100 text-gray-100">
@@ -27,5 +27,5 @@ export const Switcher = () => {
       </Switch>
       <p>Dark</p>
     </div>
-  )
-}
+  );
+};

@@ -25,7 +25,7 @@ import { __prod__ } from "./lib/constants";
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server);
+const io = new Server(server, { cors: { origin: "http://localhost:3000" } });
 
 const main = async () => {
   const PORT = process.env.PORT || 5000;
@@ -48,8 +48,21 @@ const main = async () => {
 
   const sessionRepository = getRepository(Session);
 
-  io.on("connection", (_socket) => {
-    console.log("A user connected");
+  let interval: NodeJS.Timeout;
+
+  io.on("connection", (socket) => {
+    console.log("A client connected");
+
+    if (interval) clearInterval(interval);
+
+    socket.on("getSong", (data) => {
+      interval = setInterval(() => socket.emit("song", data), 1000);
+    });
+
+    socket.on("disconnect", () => {
+      if (interval) clearInterval(interval);
+      console.log("Client disconnected");
+    });
   });
 
   app.use(

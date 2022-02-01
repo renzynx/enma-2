@@ -2,7 +2,7 @@ import './lib/setup';
 import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
 import { GuildConfig } from './entities/guild_config';
-import { Collection } from 'discord.js';
+import { Collection, TextChannel } from 'discord.js';
 import type { Message } from 'discord.js';
 import { io } from 'socket.io-client';
 import { Manager, Player } from 'erela.js';
@@ -56,6 +56,8 @@ const client = new SapphireClient({
 	]
 });
 
+const socket = io('http://localhost:8080');
+
 container.manager = new Manager({
 	nodes: [
 		{
@@ -68,12 +70,16 @@ container.manager = new Manager({
 		const guild = client.guilds.cache.get(id);
 		if (guild) return guild.shard.send(payload);
 	}
-}).on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`));
+})
+	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
+	.on('trackStart', async (player) => {
+		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
+		if (channel) return channel.send(`Now playing: ${player.queue?.current?.title}`);
+		return null;
+	});
 
 const main = async () => {
 	try {
-		const socket = io(process.env.WEBSOCKET!);
-
 		socket.on('updatePrefix', async (data: GuildConfig) => {
 			console.log(data);
 			container.config.set(data.guild_id, data);
