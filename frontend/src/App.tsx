@@ -6,20 +6,28 @@ import { NotFound } from "./pages/404";
 import { Category } from "./pages/category";
 import { Dashboard } from "./pages/dashboard";
 import { Login } from "./pages/login";
+import type { UserConfig } from "./lib/types";
+
+type Query = {
+  user: UserConfig;
+};
 
 function App() {
-  const { data, loading, error } = useQuery(UserQuery);
+  const { data, loading, error } = useQuery<Query>(UserQuery);
 
   if (loading) return <Loading />;
 
   return (
     <div>
-      {data.user && !error ? (
+      {data?.user && !error ? (
         <>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/:id" element={<Category />} />
+            <Route path="/dashboard" element={<Dashboard user={data.user} />} />
+            <Route
+              path="/dashboard/:id"
+              element={<Category user={data.user} />}
+            />
           </Routes>
         </>
       ) : (

@@ -1,8 +1,7 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { useQuery } from "@apollo/client";
-import { UserQuery } from "../../lib/graphql/query";
+import { UserConfig } from "../../lib/types";
 
 const navigation = [
   { name: "Home", href: "/dashboard", current: false },
@@ -17,9 +16,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const Navbar = () => {
-  const { data } = useQuery(UserQuery);
-
+const Navbar = ({ user }: { user: UserConfig }) => {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -78,8 +75,8 @@ export const Navbar = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={`https://cdn.discordapp.com/avatars/${data.user.uid}/${data.user.avatar}.webp`}
-                        alt={data.user.user_tag}
+                        src={`https://cdn.discordapp.com/avatars/${user.uid}/${user.avatar}.webp`}
+                        alt={user.user_tag}
                       />
                     </Menu.Button>
                   </div>
@@ -151,3 +148,5 @@ export const Navbar = () => {
     </Disclosure>
   );
 };
+
+export { Navbar as default };

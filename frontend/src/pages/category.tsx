@@ -1,15 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { Navigate, useParams } from "react-router-dom";
-
 import { Loading } from "../components/layouts/Loading";
-import { Navbar } from "../components/layouts/Navbar";
 import { GuildConfig } from "../lib/graphql/query";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
+import { UserConfig } from "../lib/types";
 
 const Welcome = lazy(() => import("../components/dashboard/Welcome"));
 const Prefix = lazy(() => import("../components/dashboard/Prefix"));
+const Navbar = lazy(() => import("../components/layouts/Navbar"));
 
-export const Category = () => {
+export const Category = ({ user }: { user: UserConfig }) => {
   const { id } = useParams();
 
   const { data, loading, error } = useQuery(GuildConfig, {
@@ -21,13 +21,15 @@ export const Category = () => {
   if (error) return <Navigate replace to="/dashboard" />;
 
   return data && data.config ? (
-    <div className="text-slate-800 bg-slate-900 ">
-      <Navbar />
-      <div className="grid lg:grid-flow-col md:grid-flow-row gap-5 w-[80%] mx-auto my-20">
-        <Prefix config={data.config} />
-        <Welcome />
+    <Suspense fallback={<Loading />}>
+      <div className="text-slate-800 bg-slate-900 ">
+        <Navbar user={user} />
+        <div className="grid lg:grid-flow-col md:grid-flow-row gap-5 w-[80%] mx-auto my-20">
+          <Prefix config={data.config} />
+          <Welcome />
+        </div>
       </div>
-    </div>
+    </Suspense>
   ) : (
     <Navigate replace to={"/dashboard"} />
   );
