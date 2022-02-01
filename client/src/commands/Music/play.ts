@@ -6,7 +6,8 @@ import type { Message } from 'discord.js';
 @ApplyOptions<CommandOptions>({
 	description: 'Play a song!',
 	preconditions: ['inVoiceChannel'],
-	aliases: ['p']
+	aliases: ['p'],
+	detailedDescription: 'play `<song>`'
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
