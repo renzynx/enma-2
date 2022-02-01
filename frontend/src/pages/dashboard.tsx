@@ -1,9 +1,11 @@
 import { useQuery } from "@apollo/client";
+import { lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu } from "../components/dashboard/Menu";
 import { Loading } from "../components/layouts/Loading";
 import { Navbar } from "../components/layouts/Navbar";
 import { GuildQuery } from "../lib/graphql/query";
+
+const Menu = lazy(() => import("../components/dashboard/Menu"));
 
 export const Dashboard = () => {
   const { data, loading } = useQuery(GuildQuery);
@@ -16,13 +18,13 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="bg-slate-900">
+    <Suspense fallback={<Loading />}>
       <Navbar />
       <Menu
         included={data.guilds.included}
         excluded={data.guilds.excluded}
         click={handleClick}
       />
-    </div>
+    </Suspense>
   );
 };

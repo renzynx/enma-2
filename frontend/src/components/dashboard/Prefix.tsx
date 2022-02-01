@@ -9,7 +9,7 @@ type prefixProps = {
   config: GuildConfig;
 };
 
-export const Prefix: FC<prefixProps> = ({ config }) => {
+const Prefix: FC<prefixProps> = ({ config }) => {
   const { id } = useParams();
   const [mutatePrefix] = useMutation(updatePrefix);
 
@@ -95,3 +95,5 @@ export const Prefix: FC<prefixProps> = ({ config }) => {
     </>
   );
 };
+
+export { Prefix as default };

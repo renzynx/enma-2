@@ -41,12 +41,12 @@ export const Navbar = () => {
                 <div className="flex-shrink-0 flex items-center">
                   <img
                     className="block lg:hidden h-8 w-auto rounded-full"
-                    src="https://cdn.discordapp.com/avatars/772690931539247104/5f0aa26a8e2b83c3d218989b3063615e.png"
+                    src="https://cdn.discordapp.com/avatars/772690931539247104/5f0aa26a8e2b83c3d218989b3063615e.webp"
                     alt="enma"
                   />
                   <img
-                    className="hidden lg:block h-8 w-auto rounded-full"
-                    src="https://cdn.discordapp.com/avatars/772690931539247104/5f0aa26a8e2b83c3d218989b3063615e.png"
+                    className="hidden lg:block h-8  w-auto rounded-full"
+                    src="https://cdn.discordapp.com/avatars/772690931539247104/5f0aa26a8e2b83c3d218989b3063615e.webp"
                     alt="enma"
                   />
                 </div>
@@ -78,7 +78,7 @@ export const Navbar = () => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={`https://cdn.discordapp.com/avatars/${data.user.uid}/${data.user.avatar}.png`}
+                        src={`https://cdn.discordapp.com/avatars/${data.user.uid}/${data.user.avatar}.webp`}
                         alt={data.user.user_tag}
                       />
                     </Menu.Button>

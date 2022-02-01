@@ -7,7 +7,7 @@ import { updateWelcomeChannel } from "../../lib/graphql/mutation";
 import { Modal } from "../layouts/Modal";
 import { useParams } from "react-router-dom";
 
-export const Welcome = () => {
+const Welcome = () => {
   const { id } = useParams();
 
   const { data } = useQuery(GuildChannel, {
@@ -162,3 +162,5 @@ export const Welcome = () => {
     </>
   );
 };
+
+export { Welcome as default };

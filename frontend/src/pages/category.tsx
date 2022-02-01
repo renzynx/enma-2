@@ -1,10 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { Navigate, useParams } from "react-router-dom";
-import { Prefix } from "../components/dashboard/Prefix";
-import { Welcome } from "../components/dashboard/Welcome";
+
 import { Loading } from "../components/layouts/Loading";
 import { Navbar } from "../components/layouts/Navbar";
 import { GuildConfig } from "../lib/graphql/query";
+import { lazy } from "react";
+
+const Welcome = lazy(() => import("../components/dashboard/Welcome"));
+const Prefix = lazy(() => import("../components/dashboard/Prefix"));
 
 export const Category = () => {
   const { id } = useParams();

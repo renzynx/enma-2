@@ -47,6 +47,7 @@ const main = async () => {
     host: process.env.REDIS_HOST,
     password: process.env.REDIS_PASSWORD,
   });
+
   const redisStore = Store(session);
 
   if (redisClient.status === "connecting")

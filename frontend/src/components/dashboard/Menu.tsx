@@ -8,7 +8,7 @@ type Guilds = {
   click: (id: string) => void;
 };
 
-export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
+const Menu: FC<Guilds> = ({ included, excluded, click }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-20 my-20">
       {included.map((item, index) => (
@@ -20,11 +20,13 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
           <img
             src={
               item.icon
-                ? `https://cdn.discordapp.com/icons/${item.id}/${item.icon}.png?size=256`
+                ? `https://cdn.discordapp.com/icons/${item.id}/${item.icon}.webp?size=256`
                 : DiscordIcon
             }
             alt="guild icon"
-            className="w-[197px] h-[197px] mb-4 rounded-md"
+            className="mb-4 rounded-md"
+            width={"197px"}
+            height={"197px"}
           />
           <p className="text-center dark:text-gray-100">{item.name}</p>
         </div>
@@ -40,11 +42,13 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
           <img
             src={
               item.icon
-                ? `https://cdn.discordapp.com/icons/${item.id}/${item.icon}.png?size=256`
+                ? `https://cdn.discordapp.com/icons/${item.id}/${item.icon}.webp?size=256`
                 : DiscordIcon
             }
             alt="guild icon"
-            className="w-[197px] h-[197px] mb-4 rounded-md"
+            className="mb-4 rounded-md"
+            width={"197px"}
+            height={"197px"}
           />
           <p className="dark:text-gray-100 text-center">{item.name}</p>
         </div>
@@ -52,3 +56,5 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
     </div>
   );
 };
+
+export { Menu as default };
