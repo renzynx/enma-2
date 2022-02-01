@@ -8,7 +8,7 @@ const navigation = [
   { name: "Home", href: "/dashboard", current: false },
   {
     name: "Invite me",
-    href: "https://discord.com/api/oauth2/authorize?client_id=908928792947478570&permissions=8&scope=applications.commands%20bot",
+    href: process.env.REACT_APP_INVITE_URL,
     current: false,
   },
 ];

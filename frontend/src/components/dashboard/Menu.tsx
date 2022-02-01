@@ -34,8 +34,7 @@ export const Menu: FC<Guilds> = ({ included, excluded, click }) => {
           className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
           key={index}
           onClick={() =>
-            (window.location.href =
-              "https://discord.com/api/oauth2/authorize?client_id=908928792947478570&permissions=8&scope=applications.commands%20bot")
+            (window.location.href = process.env.REACT_APP_INVITE_URL!)
           }
         >
           <img
