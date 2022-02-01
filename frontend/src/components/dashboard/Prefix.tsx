@@ -20,7 +20,7 @@ export const Prefix: FC<prefixProps> = ({ config }) => {
 
   return (
     <>
-      <div className="shadow-xl p-5 ring-1 rounded-md bg-slate-800">
+      <div className="shadow-xl p-5 ring-1 rounded-md bg-slate-800 hover:ring-red-400 ease-linear duration-500">
         <label
           htmlFor="prefix"
           className="block text-md mb-4 font-semibold text-gray-100"

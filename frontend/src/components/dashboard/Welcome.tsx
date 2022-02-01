@@ -25,7 +25,7 @@ export const Welcome = () => {
 
   return (
     <>
-      <div className="ring-1 p-5 rounded-md shadow-xl bg-slate-800">
+      <div className="ring-1 p-5 rounded-md shadow-xl bg-slate-800 hover:ring-red-400 ease-linear duration-500">
         <p className="block text-md mb-4 text-gray-100 font-semibold">
           Set Welcome Channel
         </p>
