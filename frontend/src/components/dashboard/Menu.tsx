@@ -9,6 +9,15 @@ type Guilds = {
 };
 
 const Menu: FC<Guilds> = ({ included, excluded, click }) => {
+  if (!included && !excluded)
+    return (
+      <div className="flex items-center justify-center">
+        <p className="text-center text-lg">
+          Look like you don't have any guilds available
+        </p>
+      </div>
+    );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-20 my-20">
       {included &&
