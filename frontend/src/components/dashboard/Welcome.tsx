@@ -29,8 +29,6 @@ export const Welcome: FC<props> = ({ config, mutateWelcome, channels }) => {
   const Modal = lazy(() => import("../layouts/Modal"));
   const { id } = useParams();
 
-  console.log(config);
-
   const [selected, setSelected] = useState(
     channels && config.welcome_channel !== null
       ? `#${channels.filter((c) => c.id === config.welcome_channel)[0].name}`
