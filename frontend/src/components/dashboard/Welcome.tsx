@@ -30,7 +30,7 @@ export const Welcome: FC<props> = ({ config, mutateWelcome, channels }) => {
   const { id } = useParams();
 
   const [selected, setSelected] = useState(
-    channels
+    channels && config.welcome_channel
       ? `#${channels.filter((c) => c.id === config.welcome_channel)[0].name}`
       : "Please select a channel!"
   );
