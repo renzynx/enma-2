@@ -1,19 +1,30 @@
-import { useMutation } from "@apollo/client";
+import {
+  ApolloCache,
+  DefaultContext,
+  MutationFunctionOptions,
+  OperationVariables,
+} from "@apollo/client";
 import { FC, lazy, useState } from "react";
-import { updatePrefix } from "../../lib/graphql/mutation";
-
 import { useParams } from "react-router-dom";
 import type { GuildConfig } from "../../lib/types";
 
 type prefixProps = {
   config: GuildConfig;
+  mutatePrefix: (
+    options?:
+      | MutationFunctionOptions<
+          any,
+          OperationVariables,
+          DefaultContext,
+          ApolloCache<any>
+        >
+      | undefined
+  ) => Promise<any>;
 };
 
-const Prefix: FC<prefixProps> = ({ config }) => {
+export const Prefix: FC<prefixProps> = ({ config, mutatePrefix }) => {
   const Modal = lazy(() => import("../layouts/Modal"));
   const { id } = useParams();
-  const [mutatePrefix] = useMutation(updatePrefix);
-
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenF, setIsOpenF] = useState(false);
   const [isOpenW, setIsOpenW] = useState(false);
@@ -21,7 +32,7 @@ const Prefix: FC<prefixProps> = ({ config }) => {
 
   return (
     <>
-      <div className="shadow-xl p-5 ring-1 rounded-md bg-slate-800 hover:ring-red-400 ease-linear duration-500">
+      <div className="shadow-xl p-5 ring-1 rounded-md bg-slate-800 text-slate-800 hover:ring-red-400 ease-linear duration-500">
         <label
           htmlFor="prefix"
           className="block text-md mb-4 font-semibold text-gray-100"
@@ -97,5 +108,3 @@ const Prefix: FC<prefixProps> = ({ config }) => {
     </>
   );
 };
-
-export { Prefix as default };

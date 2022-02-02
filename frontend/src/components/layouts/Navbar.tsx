@@ -16,7 +16,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Navbar = ({ user }: { user: UserConfig }) => {
+export const Navbar = ({ user }: { user: UserConfig }) => {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -71,12 +71,12 @@ const Navbar = ({ user }: { user: UserConfig }) => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative">
                   <div>
-                    <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <Menu.Button className="bg-gray-800 flex items-center ring-2 ring-indigo-400 gap-1 text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
                         src={`https://cdn.discordapp.com/avatars/${user.uid}/${user.avatar}.webp`}
-                        alt={user.user_tag}
+                        alt="avatar"
                       />
                     </Menu.Button>
                   </div>

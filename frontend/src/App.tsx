@@ -4,8 +4,8 @@ import { Loading } from "./components/layouts/Loading";
 import { UserQuery } from "./lib/graphql/query";
 import { NotFound } from "./pages/404";
 import { Login } from "./pages/login";
-import type { UserConfig } from "./lib/types";
 import { lazy, Suspense } from "react";
+import type { UserConfig } from "./lib/types";
 
 type Query = {
   user: UserConfig;
@@ -40,6 +40,7 @@ function App() {
                 </Suspense>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </>
       ) : (

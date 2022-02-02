@@ -47,13 +47,3 @@ export const GuildChannel = gql`
     }
   }
 `;
-
-export const CurrentSong = gql`
-  query {
-    currentSong {
-      title
-      thumbnail
-      uri
-    }
-  }
-`;

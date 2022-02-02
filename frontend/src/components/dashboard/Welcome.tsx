@@ -1,23 +1,39 @@
-import { Fragment, lazy, useState } from "react";
+import {
+  ApolloCache,
+  DefaultContext,
+  MutationFunctionOptions,
+  OperationVariables,
+} from "@apollo/client";
+import { FC, Fragment, lazy, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
-import { useMutation, useQuery } from "@apollo/client";
-import { GuildChannel } from "../../lib/graphql/query";
-import { updateWelcomeChannel } from "../../lib/graphql/mutation";
-
 import { useParams } from "react-router-dom";
+import { GuildChannelType, GuildConfig } from "../../lib/types";
 
-const Welcome = () => {
+type props = {
+  config: GuildConfig;
+  mutateWelcome: (
+    options?:
+      | MutationFunctionOptions<
+          any,
+          OperationVariables,
+          DefaultContext,
+          ApolloCache<any>
+        >
+      | undefined
+  ) => Promise<any>;
+  channels?: GuildChannelType[];
+};
+
+export const Welcome: FC<props> = ({ config, mutateWelcome, channels }) => {
   const Modal = lazy(() => import("../layouts/Modal"));
   const { id } = useParams();
 
-  const { data } = useQuery(GuildChannel, {
-    variables: { id },
-  });
-
-  const [mutateWelcome] = useMutation(updateWelcomeChannel);
-
-  const [selected, setSelected] = useState("Please choose a channel.");
+  const [selected, setSelected] = useState(
+    channels
+      ? `#${channels.filter((c) => c.id === config.welcome_channel)[0].name}`
+      : "Please select a channel!"
+  );
   const [channelId, setchannelId] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +42,7 @@ const Welcome = () => {
 
   return (
     <>
-      <div className="ring-1 p-5 rounded-md shadow-xl bg-slate-800 hover:ring-red-400 ease-linear duration-500">
+      <div className="ring-1 p-5 rounded-md shadow-xl bg-slate-800 text-slate-800 hover:ring-red-400 ease-linear duration-500">
         <p className="block text-md mb-4 text-gray-100 font-semibold">
           Set Welcome Channel
         </p>
@@ -34,10 +50,11 @@ const Welcome = () => {
           value={selected}
           onChange={(e) => {
             setSelected(e);
-            data.channels.some((k: { name: string; id: string }) => {
-              if ("#" + k.name === e) return setchannelId(k.id);
-              return null;
-            });
+            channels &&
+              channels.some((k) => {
+                if ("#" + k.name === e) return setchannelId(k.id);
+                return null;
+              });
           }}
         >
           <div className="relative mt-1 ring-1 rounded-md">
@@ -60,8 +77,8 @@ const Welcome = () => {
               leaveTo="transform scale-95 opacity-0"
             >
               <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {data &&
-                  data.channels.map((channel: any) => (
+                {channels &&
+                  channels.map((channel: GuildChannelType) => (
                     <Listbox.Option
                       key={channel.id}
                       className={({ active }) =>
@@ -163,5 +180,3 @@ const Welcome = () => {
     </>
   );
 };
-
-export { Welcome as default };
