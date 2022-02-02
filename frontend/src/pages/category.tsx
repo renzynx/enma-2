@@ -5,11 +5,10 @@ import { GuildConfig } from "../lib/graphql/query";
 import { lazy, Suspense } from "react";
 import { UserConfig } from "../lib/types";
 
-const Welcome = lazy(() => import("../components/dashboard/Welcome"));
-const Prefix = lazy(() => import("../components/dashboard/Prefix"));
-const Navbar = lazy(() => import("../components/layouts/Navbar"));
-
-export const Category = ({ user }: { user: UserConfig }) => {
+const Category = ({ user }: { user: UserConfig }) => {
+  const Welcome = lazy(() => import("../components/dashboard/Welcome"));
+  const Prefix = lazy(() => import("../components/dashboard/Prefix"));
+  const Navbar = lazy(() => import("../components/layouts/Navbar"));
   const { id } = useParams();
 
   const { data, loading, error } = useQuery(GuildConfig, {
@@ -34,3 +33,5 @@ export const Category = ({ user }: { user: UserConfig }) => {
     <Navigate replace to={"/dashboard"} />
   );
 };
+
+export { Category as default };

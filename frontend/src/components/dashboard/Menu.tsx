@@ -57,4 +57,4 @@ const Menu: FC<Guilds> = ({ included, excluded, click }) => {
   );
 };
 
-export { Menu as default };
+export { Menu };

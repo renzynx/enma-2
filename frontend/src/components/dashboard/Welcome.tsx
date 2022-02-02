@@ -1,13 +1,14 @@
-import { Fragment, useState } from "react";
+import { Fragment, lazy, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { useMutation, useQuery } from "@apollo/client";
 import { GuildChannel } from "../../lib/graphql/query";
 import { updateWelcomeChannel } from "../../lib/graphql/mutation";
-import { Modal } from "../layouts/Modal";
+
 import { useParams } from "react-router-dom";
 
 const Welcome = () => {
+  const Modal = lazy(() => import("../layouts/Modal"));
   const { id } = useParams();
 
   const { data } = useQuery(GuildChannel, {
@@ -120,7 +121,7 @@ const Welcome = () => {
               });
               return setTimeout(() => setIsOpen(false), 3000);
             }}
-            className="px-6 py-2 mt-2 text-sm ring-1 rounded-md bg-indigo-500 hover:bg-indigo-600 text-gray-200"
+            className="px-6 py-2 mt-2 text-sm ring-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white shadow-md ease-linear duration-500"
           >
             Save
           </button>
@@ -132,7 +133,7 @@ const Welcome = () => {
               setIsOpenW(true);
               return setTimeout(() => setIsOpenW(false), 3000);
             }}
-            className="px-6 py-2 mt-2 text-sm ring-1 rounded-md text-gray-200 bg-red-500 hover:bg-red-600"
+            className="px-6 py-2 mt-2 text-sm rounded-md text-white bg-red-600 hover:bg-red-500 shadow-md ease-linear duration-500"
           >
             Reset
           </button>

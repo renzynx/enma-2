@@ -120,7 +120,7 @@ export class UserCommand extends Command {
 							.map((c) => `\`${c.name}\``)
 							.join(' ')
 					)
-					.setTitle(category)
+					.setTitle(category + ' Commands')
 			);
 		}
 

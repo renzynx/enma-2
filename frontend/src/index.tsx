@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 
 export const client = new ApolloClient({
   uri: `${process.env.REACT_APP_API_URL}/graphql`,
@@ -21,3 +22,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
+
+serviceWorkerRegistration.register();

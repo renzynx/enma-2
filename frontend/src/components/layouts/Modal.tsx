@@ -1,15 +1,15 @@
-import { Dialog, Transition } from "@headlessui/react"
-import { FC, Fragment } from "react"
+import { Dialog, Transition } from "@headlessui/react";
+import { FC, Fragment } from "react";
 
 type ModalProps = {
-  isOpen: boolean
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
-  title: string
-  titleColor: string
-  description: string
-}
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
+  titleColor: string;
+  description: string;
+};
 
-export const Modal: FC<ModalProps> = ({
+const Modal: FC<ModalProps> = ({
   isOpen,
   setIsOpen,
   title,
@@ -17,7 +17,7 @@ export const Modal: FC<ModalProps> = ({
   description,
 }) => {
   function closeModal() {
-    setIsOpen(false)
+    setIsOpen(false);
   }
 
   return (
@@ -83,5 +83,7 @@ export const Modal: FC<ModalProps> = ({
         </Dialog>
       </Transition>
     </>
-  )
-}
+  );
+};
+
+export { Modal as default };

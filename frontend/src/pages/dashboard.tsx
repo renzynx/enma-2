@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Loading } from "../components/layouts/Loading";
 import { GuildQuery } from "../lib/graphql/query";
 import { UserConfig } from "../lib/types";
+import { Menu } from "../components/dashboard/Menu";
 
-const Menu = lazy(() => import("../components/dashboard/Menu"));
-const Navbar = lazy(() => import("../components/layouts/Navbar"));
-
-export const Dashboard = ({ user }: { user: UserConfig }) => {
+const Dashboard = ({ user }: { user: UserConfig }) => {
+  const Navbar = lazy(() => import("../components/layouts/Navbar"));
   const { data, loading } = useQuery(GuildQuery);
   const navigate = useNavigate();
 
@@ -29,3 +28,5 @@ export const Dashboard = ({ user }: { user: UserConfig }) => {
     </Suspense>
   );
 };
+
+export { Dashboard as default };
