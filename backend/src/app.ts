@@ -1,6 +1,6 @@
 import "./lib/setup";
 import "./lib/oauth";
-import api from "./routes/api";
+import auth from "./routes/auth";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
@@ -121,7 +121,7 @@ const main = async () => {
     cors: false,
   });
 
-  app.use("/", api);
+  app.use("/auth", auth);
 
   app.use("*", (_req, res) => res.sendStatus(404));
 

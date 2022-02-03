@@ -2,6 +2,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { UserConfig } from "../../lib/types";
+import { useMutation } from "@apollo/client";
+import { logOutMutation } from "../../lib/graphql/mutation";
 
 const navigation = [
   { name: "Home", href: "/dashboard", current: false },
@@ -17,6 +19,8 @@ function classNames(...classes: string[]) {
 }
 
 export const Navbar = ({ user }: { user: UserConfig }) => {
+  const [logOut] = useMutation(logOutMutation);
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -111,6 +115,11 @@ export const Navbar = ({ user }: { user: UserConfig }) => {
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-red-700"
                             )}
+                            onClick={() =>
+                              logOut({
+                                onError: () => (window.location.href = "/"),
+                              })
+                            }
                           >
                             Sign out
                           </a>

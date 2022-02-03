@@ -15,3 +15,9 @@ export const updateWelcomeChannel = gql`
     }
   }
 `;
+
+export const logOutMutation = gql`
+  mutation LogOut {
+    logout
+  }
+`;
