@@ -118,10 +118,7 @@ export const Navbar = ({ user }: { user: UserConfig }) => {
                             onClick={(e) => {
                               e.preventDefault();
                               logOut({
-                                onCompleted: () => {
-                                  console.log("logged out");
-                                  window.location.href = "/";
-                                },
+                                onCompleted: () => (window.location.href = "/"),
                                 onError: (error) => console.log(error),
                               });
                             }}
