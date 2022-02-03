@@ -9,10 +9,10 @@ type Guilds = {
 };
 
 const Menu: FC<Guilds> = ({ included, excluded, click }) => {
-  if (!included && !excluded)
+  if (!included?.length && !excluded?.length)
     return (
-      <div className="flex items-center justify-center">
-        <p className="text-center text-lg">
+      <div className="flex items-center justify-center w-screen min-h-[90vh]">
+        <p className="text-center text-2xl">
           Look like you don't have any guilds available
         </p>
       </div>
