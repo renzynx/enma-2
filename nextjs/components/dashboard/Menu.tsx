@@ -40,7 +40,7 @@ const Menu: FC = () => {
       {included &&
         included.map((item, index) => (
           <div
-            className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-2 ring-black ring-opacity-5 focus:outline-none"
+            className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-slate-800 ring-2 ring-black ring-opacity-5 focus:outline-none"
             key={index}
             onClick={() => click(item.id)}
           >
@@ -55,13 +55,13 @@ const Menu: FC = () => {
               width="197px"
               height="197px"
             />
-            <p className="text-center dark:text-gray-100">{item.name}</p>
+            <p className="text-center mt-2">{item.name}</p>
           </div>
         ))}
       {excluded &&
         excluded.map((item, index) => (
           <div
-            className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
+            className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
             key={index}
             onClick={() =>
               (window.location.href = process.env.REACT_APP_INVITE_URL!)
@@ -74,11 +74,11 @@ const Menu: FC = () => {
                   : DiscordIcon.src
               }
               alt="guild icon"
-              className="mb-4 rounded-md"
+              className="rounded-md"
               width="197px"
               height="197px"
             />
-            <p className="text-center">{item.name}</p>
+            <p className="text-center mt-2">{item.name}</p>
           </div>
         ))}
     </div>

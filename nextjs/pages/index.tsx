@@ -2,8 +2,8 @@ import { NextPage } from "next";
 import { FaDiscord } from "react-icons/fa";
 import { UserQuery } from "../lib/graphql/query";
 import { UserConfig } from "../lib/types";
-import { graphqlClient } from "./_app";
 import { useRouter } from "next/router";
+import { graphqlClient } from "../lib/graphql";
 import Image from "next/image";
 import Head from "next/head";
 

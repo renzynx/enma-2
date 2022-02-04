@@ -3,14 +3,15 @@ import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
 import { GuildConfig } from './entities/guild_config';
 import { Collection, TextChannel } from 'discord.js';
-import type { Message } from 'discord.js';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { Manager, Player } from 'erela.js';
+import type { Message } from 'discord.js';
 
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
 		getPlayer: (message: Message) => Player | undefined;
+		socket: Socket<any, any>;
 		manager: Manager;
 	}
 }
@@ -37,7 +38,7 @@ const client = new SapphireClient({
 
 		return guildCfg?.prefix!;
 	},
-	regexPrefix: /^(hey +)?bruh[,! ]/i,
+	regexPrefix: /^(hey +)?enma[,! ]/i,
 	caseInsensitiveCommands: true,
 	logger: {
 		level: LogLevel.Debug
@@ -56,8 +57,7 @@ const client = new SapphireClient({
 	]
 });
 
-const socket = io('http://localhost:8080');
-
+container.socket = io('http://localhost:8080');
 container.manager = new Manager({
 	nodes: [
 		{
@@ -80,7 +80,7 @@ container.manager = new Manager({
 
 const main = async () => {
 	try {
-		socket.on('updatePrefix', async (data: GuildConfig) => {
+		container.socket.on('updatePrefix', async (data: GuildConfig) => {
 			container.config.set(data.guild_id, data);
 		});
 
@@ -94,7 +94,7 @@ const main = async () => {
 			synchronize: false,
 			entities: [GuildConfig]
 		})
-			.then((_) => client.logger.info('Connected to POSTGRESQL database'))
+			.then(() => client.logger.info('Connected to POSTGRESQL database'))
 			.catch((err) => client.logger.error(err));
 
 		const guildRepository = getRepository(GuildConfig);

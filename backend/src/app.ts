@@ -84,6 +84,8 @@ const main = async () => {
       saveUninitialized: false,
       cookie: {
         maxAge: 60000 * 60 * 24 * 7,
+        httpOnly: true,
+        sameSite: "lax",
         domain: __prod__ ? ".renzynx.space" : null,
       },
       store: new redisStore({ client: redisClient }),
