@@ -110,7 +110,7 @@ container.manager = new Manager({
 	})
 	.on('queueEnd', (player) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
-		channel && channel.send('Queue ended, i hope you enjoyed the session!');
+		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
 		return player.destroy();
 	});
 
