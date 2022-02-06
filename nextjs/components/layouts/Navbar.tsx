@@ -33,6 +33,8 @@ const Navbar = () => {
 
   const user = data?.user;
 
+  if (!user) return <></>;
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
