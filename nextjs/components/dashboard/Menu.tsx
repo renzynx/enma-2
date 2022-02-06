@@ -9,13 +9,20 @@ import Image from "next/image";
 
 const Menu: FC = () => {
   const router = useRouter();
-  const { data, loading } = useQuery<GuildQueryType>(GuildQuery);
+  const { data, loading, error } = useQuery<GuildQueryType>(GuildQuery);
 
   if (loading)
     return (
       <div className="flex w-screen flex-col items-center justify-center min-h-[90vh]">
         <p>Loading guilds...</p>
         <BarLoader loading={true} color="white" width={"200px"} />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex min-h-screen w-screen items-center justify-center bg-slate-900">
+        <p className="text-2xl text-teal-400 text-center">404 Not Found</p>
       </div>
     );
 
