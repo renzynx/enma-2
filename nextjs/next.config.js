@@ -8,7 +8,8 @@ const nextConfig = {
     return [
       {
         source: "/invite",
-        destination: process.env.NEXT_PUBLIC_INVITE_URL,
+        destination:
+          "https://discord.com/api/oauth2/authorize?client_id=772690931539247104&permissions=8&scope=bot%20applications.commands",
         permanent: true,
       },
     ];
