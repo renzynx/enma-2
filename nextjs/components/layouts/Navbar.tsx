@@ -1,13 +1,15 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { UserQueryType } from "../../lib/types";
+import { UserConfig, UserQueryType } from "../../lib/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { logOutMutation } from "../../lib/graphql/mutation";
 import { UserQuery } from "../../lib/graphql/query";
 import { Loading } from "./Loading";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { graphqlClient } from "../../lib/graphql";
 
 const navigation = [
   { name: "Home", href: "/dashboard", current: false },
@@ -24,9 +26,12 @@ function classNames(...classes: string[]) {
 
 const Navbar = () => {
   const { data, loading } = useQuery<UserQueryType>(UserQuery);
+
   const [logOut] = useMutation(logOutMutation);
 
   if (loading) return <Loading />;
+
+  const user = data?.user;
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -100,7 +105,7 @@ const Navbar = () => {
                         className="h-8 w-8 rounded-full"
                         width="32px"
                         height="32px"
-                        src={`https://cdn.discordapp.com/avatars/${data?.user.uid}/${data?.user.avatar}.webp`}
+                        src={`https://cdn.discordapp.com/avatars/${user?.uid}/${user?.avatar}.webp`}
                         alt="avatar"
                       />
                     </Menu.Button>

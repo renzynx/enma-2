@@ -3,8 +3,8 @@ import { Args, Command, CommandOptions } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
-import type { Message } from 'discord.js';
 import { inspect } from 'util';
+import type { Message } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	aliases: ['ev'],
@@ -16,7 +16,9 @@ import { inspect } from 'util';
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
-		const code = await args.rest('string');
+		const code = await args.rest('string').catch(() => null);
+
+		if (!code) return send(message, '❌  You must provide some code to evaluate.');
 
 		const { result, success, type } = await this.eval(message, code, {
 			async: args.getFlags('async'),

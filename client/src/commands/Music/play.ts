@@ -7,26 +7,30 @@ import type { Message } from 'discord.js';
 	description: 'Play a song!',
 	preconditions: ['inVoiceChannel'],
 	aliases: ['p'],
-	detailedDescription: 'play `<song>`'
+	detailedDescription: 'play `<song> --s --r` - \n`--s` - Shuffle the queue.\n`--r` - Repeat the queue.',
+	flags: ['shuffle', 's', 'repeat', 'r']
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		if (!message.guild || !message.member) return;
 
-		const song = await args.rest('string');
+		const song = await args.rest('string').catch(() => null);
 
 		if (!song) return send(message, 'You need to give me a URL or a query to search for!');
+
+		const shuffle = args.getFlags('shuffle', 's');
+		const repeat = args.getFlags('repeat', 'r');
 
 		let res;
 
 		const player =
-			this.container.manager.players.get(message.guild.id) ||
+			this.container.manager.players.get(message.guild.id) ??
 			this.container.manager.create({
 				guild: message.guild.id,
 				voiceChannel: message.member.voice.channelId!,
 				textChannel: message.channel.id,
 				selfDeafen: true,
-				volume: 85
+				volume: 80
 			});
 
 		try {
@@ -36,8 +40,25 @@ export class UserCommand extends Command {
 			else if (res.loadType === 'PLAYLIST_LOADED') {
 				if (player.state !== 'CONNECTED') player.connect();
 				player.queue.add(res.tracks);
+				if (shuffle) player.queue.shuffle();
+				if (repeat) player.setQueueRepeat(true);
 				if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
-				return send(message, `Enqueuing playlist \`${res.playlist?.name}\` with ${res.tracks.length} tracks.`);
+
+				const playlist = this.container.embed({
+					author: {
+						name: message.author.username,
+						iconURL: message.author.displayAvatarURL({ dynamic: true })
+					},
+					description: `Loaded playlist **${res.playlist?.name}** with ${res.tracks.length} tracks.`,
+					color: 0x00ff00,
+					thumbnail: { proxy_url: res.playlist?.selectedTrack?.thumbnail! }
+				});
+
+				if (shuffle) playlist.addField('Shuffle', ':white_check_mark:');
+				if (repeat) playlist.addField('Queue Repeat', ':white_check_mark:');
+
+				const msgSent = await send(message, { embeds: [playlist] });
+				return setTimeout(() => msgSent.deletable && msgSent.delete(), res.playlist?.duration!);
 			}
 		} catch (err) {
 			this.container.logger.error(err);
@@ -52,6 +73,17 @@ export class UserCommand extends Command {
 
 		if (!player.playing && !player.paused && !player.queue.size) player.play();
 
-		return send(message, `Enqueuing **${res.tracks[0].title}** (requested by **${message.author.username}**)`);
+		const trackEnqueued = this.container.embed({
+			author: {
+				name: message.author.username,
+				iconURL: message.author.displayAvatarURL({ dynamic: true })
+			},
+			description: `Enqueuing **${res.tracks[0].title}**.`,
+			color: 0x00ff00
+		});
+
+		const msgSent = await send(message, { embeds: [trackEnqueued] });
+
+		return setTimeout(() => msgSent.deletable && msgSent.delete(), res.tracks[0].duration);
 	}
 }

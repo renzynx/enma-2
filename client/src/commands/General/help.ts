@@ -31,7 +31,7 @@ export class UserCommand extends Command {
 				embed.addFields([
 					{
 						name: '❯  Command',
-						value: findCommand.name,
+						value: config?.prefix + findCommand.name,
 						inline: true
 					},
 					{
@@ -51,7 +51,13 @@ export class UserCommand extends Command {
 					},
 					{
 						name: '❯  Usage',
-						value: `${config?.prefix}${findCommand.detailedDescription ? findCommand.detailedDescription : findCommand.name}`,
+						value: `${findCommand.detailedDescription ? findCommand.detailedDescription : config?.prefix + findCommand.name}`,
+						inline: true
+					},
+					{
+						name: '❯  Flags',
+						// @ts-ignore
+						value: findCommand.options.flags ? findCommand.options.flags.join(', ') : 'None',
 						inline: true
 					}
 				]);

@@ -1,23 +1,27 @@
 import './lib/setup';
+import { Collection, TextChannel, MessageEmbed, MessageEmbedOptions } from 'discord.js';
 import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
 import { GuildConfig } from './entities/guild_config';
-import { Collection, TextChannel } from 'discord.js';
 import { io, Socket } from 'socket.io-client';
 import { Manager, Player } from 'erela.js';
+import type { APIEmbed } from 'discord-api-types';
 import type { Message } from 'discord.js';
+import Spotify from 'better-erela.js-spotify';
 
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
-		getPlayer: (message: Message) => Player | undefined;
 		socket: Socket<any, any>;
 		manager: Manager;
+		getPlayer: (message: Message) => Player | undefined;
+		embed: (data?: MessageEmbed | MessageEmbedOptions | APIEmbed | undefined) => MessageEmbed;
 	}
 }
 
 container.config = new Collection();
 container.getPlayer = (message) => container.manager.players.get(message.guild?.id!);
+container.embed = (data) => new MessageEmbed(data);
 
 const client = new SapphireClient({
 	fetchPrefix: async (msg: Message) => {
@@ -66,6 +70,13 @@ container.manager = new Manager({
 			password: process.env.LAVALINK_PASSWORD!
 		}
 	],
+	plugins: [
+		new Spotify({
+			clientId: process.env.SPOTIFY_CLIENT_ID!,
+			clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
+			strategy: 'API'
+		})
+	],
 	send: (id, payload) => {
 		const guild = client.guilds.cache.get(id);
 		if (guild) return guild.shard.send(payload);
@@ -74,8 +85,33 @@ container.manager = new Manager({
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
 	.on('trackStart', async (player) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
-		if (channel) return channel.send(`Now playing: ${player.queue?.current?.title}`);
+		const embed = container
+			.embed({
+				footer: {
+					// @ts-ignore
+					text: `Requested by ${player.queue.current?.requester.tag}`,
+					// @ts-ignore
+					icon_url: player.queue.current?.requester.displayAvatarURL({ dynamic: true })
+				},
+				thumbnail: {
+					url: player.queue.current?.thumbnail!
+				},
+				description: `[${player.queue.current?.title}](${player.queue.current?.uri})`,
+				author: { name: 'Now Playing', icon_url: 'https://raw.githubusercontent.com/renzynx/enma/main/assets/gif/spinMain.gif' }
+			})
+			.setColor('#808bed');
+
+		if (channel) {
+			const msg = await channel.send({ embeds: [embed] });
+			return setTimeout(() => msg.deletable && msg.delete(), player.queue.current?.duration!);
+		}
+
 		return null;
+	})
+	.on('queueEnd', (player) => {
+		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
+		channel && channel.send('Queue ended, i hope you enjoyed the session!');
+		return player.destroy();
 	});
 
 const main = async () => {
