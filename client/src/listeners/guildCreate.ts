@@ -8,6 +8,8 @@ import { GuildConfig } from '../entities/guild_config';
 export class UserEvent extends Listener {
 	private readonly guildRepository = getRepository(GuildConfig);
 	public async run(guild: Guild) {
+		if (this.container.client.id === '772690931539247104')
+			this.container.boat.postStats(this.container.client.guilds.cache.size, '772690931539247104');
 		const config = await this.guildRepository.findOne({ guild_id: guild.id });
 
 		if (config) {

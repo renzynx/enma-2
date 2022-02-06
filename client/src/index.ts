@@ -8,17 +8,21 @@ import { Manager, Player } from 'erela.js';
 import type { APIEmbed } from 'discord-api-types';
 import type { Message } from 'discord.js';
 import Spotify from 'better-erela.js-spotify';
+import BoatClient from 'boats.js';
 
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
 		socket: Socket<any, any>;
 		manager: Manager;
+		interval: NodeJS.Timeout;
+		boat: BoatClient;
 		getPlayer: (message: Message) => Player | undefined;
 		embed: (data?: MessageEmbed | MessageEmbedOptions | APIEmbed | undefined) => MessageEmbed;
 	}
 }
 
+container.boat = new BoatClient(process.env.BOAT_TOKEN!);
 container.config = new Collection();
 container.getPlayer = (message) => container.manager.players.get(message.guild?.id!);
 container.embed = (data) => new MessageEmbed(data);
@@ -84,6 +88,7 @@ container.manager = new Manager({
 })
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
 	.on('trackStart', async (player) => {
+		container.interval = setInterval(() => container.socket.emit('message', player.queue.current), 1000);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
@@ -107,6 +112,9 @@ container.manager = new Manager({
 		}
 
 		return null;
+	})
+	.on('trackEnd', () => {
+		clearInterval(container.interval);
 	})
 	.on('queueEnd', (player) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
@@ -142,6 +150,7 @@ const main = async () => {
 		client.logger.info('Logging in');
 		await client.login();
 		client.logger.info('Logged in');
+		if (client.user?.id! === '772690931539247104') container.boat.postStats(client.guilds.cache.size, '772690931539247104');
 	} catch (error) {
 		client.logger.fatal(error);
 		client.destroy();
