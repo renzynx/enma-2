@@ -70,9 +70,7 @@ const Menu: FC = () => {
           <div
             className="transition lg:hover:-translate-y-5 rounded-md cursor-pointer hover:shadow-2xl hover:bg-gray-700 ease-in-out duration-300 px-5 py-5 mx-auto shadow-xl bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
             key={index}
-            onClick={() =>
-              (window.location.href = process.env.REACT_APP_INVITE_URL!)
-            }
+            onClick={() => router.push("/invite")}
           >
             <Image
               src={

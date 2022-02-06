@@ -1,13 +1,13 @@
 import { GetServerSideProps, NextPage } from "next";
-import { ClientOnly } from "../../components/client/ClientOnly";
+import { ClientOnly } from "../../../components/client/ClientOnly";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 
-const Navbar = dynamic(() => import("../../components/layouts/Navbar"), {
+const Navbar = dynamic(() => import("../../../components/layouts/Navbar"), {
   ssr: false,
 });
 const Categories = dynamic(
-  () => import("../../components/dashboard/Categories"),
+  () => import("../../../components/dashboard/Categories"),
   { ssr: false }
 );
 

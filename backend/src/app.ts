@@ -58,14 +58,25 @@ const main = async () => {
 
   const urls = process.env.DASHBOARD_URL.split(" ");
 
+  let interval: NodeJS.Timeout;
+
   const io = new Server(server, {
     cors: { origin: urls },
   });
 
   io.on("connection", (socket) => {
+    if (interval) clearInterval(interval);
+
     console.log("A client connected");
 
+    socket.on("message", (data) => {
+      interval = setInterval(() => {
+        socket.emit("nextjs", data);
+      }, 1000);
+    });
+
     socket.on("disconnect", () => {
+      if (interval) clearInterval(interval);
       console.log("Client disconnected");
     });
   });
