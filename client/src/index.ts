@@ -71,7 +71,8 @@ container.manager = new Manager({
 		{
 			host: process.env.LAVALINK_HOST!,
 			port: parseInt(process.env.LAVALINK_PORT!),
-			password: process.env.LAVALINK_PASSWORD!
+			password: process.env.LAVALINK_PASSWORD!,
+			secure: true
 		}
 	],
 	plugins: [
@@ -108,7 +109,8 @@ container.manager = new Manager({
 
 		if (channel) {
 			const msg = await channel.send({ embeds: [embed] });
-			return setTimeout(() => msg.deletable && msg.delete(), player.queue.current?.duration!);
+			const config = container.config.get(channel.guild.id);
+			return config?.delete_message ? setTimeout(() => msg.deletable && msg.delete(), player.queue.current?.duration!) : null;
 		}
 
 		return null;
@@ -117,6 +119,8 @@ container.manager = new Manager({
 		clearInterval(container.interval);
 	})
 	.on('queueEnd', (player) => {
+		if (player.trackRepeat) player.setTrackRepeat(false);
+		if (player.queueRepeat) player.setQueueRepeat(false);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
 		return player.destroy();
@@ -135,7 +139,7 @@ const main = async () => {
 			username: process.env.DATABASE_USERNAME,
 			password: process.env.DATABASE_PASSWORD,
 			database: process.env.DATABASE,
-			synchronize: false,
+			synchronize: true,
 			entities: [GuildConfig]
 		})
 			.then(() => client.logger.info('Connected to POSTGRESQL database'))

@@ -20,6 +20,7 @@ export class UserCommand extends Command {
 
 		const shuffle = args.getFlags('shuffle', 's');
 		const repeat = args.getFlags('repeat', 'r');
+		const config = this.container.config.get(message.guild.id);
 
 		let res;
 
@@ -30,7 +31,7 @@ export class UserCommand extends Command {
 				voiceChannel: message.member.voice.channelId!,
 				textChannel: message.channel.id,
 				selfDeafen: true,
-				volume: 80
+				volume: this.container.config.get(message.guild.id)?.volume
 			});
 
 		try {
@@ -58,7 +59,7 @@ export class UserCommand extends Command {
 				if (repeat) playlist.addField('Queue Repeat', ':white_check_mark:');
 
 				const msgSent = await send(message, { embeds: [playlist] });
-				return setTimeout(() => msgSent.deletable && msgSent.delete(), res.playlist?.duration!);
+				return config?.delete_message ? setTimeout(() => msgSent.deletable && msgSent.delete(), res.playlist?.duration!) : null;
 			}
 		} catch (err) {
 			this.container.logger.error(err);
@@ -84,6 +85,6 @@ export class UserCommand extends Command {
 
 		const msgSent = await send(message, { embeds: [trackEnqueued] });
 
-		return setTimeout(() => msgSent.deletable && msgSent.delete(), res.tracks[0].duration);
+		return config?.delete_message ? setTimeout(() => msgSent.deletable && msgSent.delete(), res.tracks[0].duration) : null;
 	}
 }

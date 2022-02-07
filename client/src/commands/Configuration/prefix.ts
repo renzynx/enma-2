@@ -10,7 +10,8 @@ import type { Args } from '@sapphire/framework';
 	description: 'Set the prefix for this server.',
 	detailedDescription: 'prefix `<newPrefix>` - This command will set the prefix for this server. You can also use `hey enma` as a prefix.',
 	cooldownDelay: 5000,
-	preconditions: ['GuildOnly']
+	preconditions: ['GuildOnly'],
+	requiredUserPermissions: ['MANAGE_GUILD']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	private readonly guildRepository = getRepository(GuildConfig);

@@ -13,4 +13,10 @@ export class GuildConfig {
 
 	@Column({ nullable: true })
 	welcome_channel!: string;
+
+	@Column({ default: false })
+	delete_message!: boolean;
+
+	@Column({ default: 80 })
+	volume!: number;
 }

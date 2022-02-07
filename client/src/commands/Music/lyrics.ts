@@ -6,6 +6,8 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { Util } from 'discord.js';
 import { send } from '@sapphire/plugin-editable-commands';
+import { PaginatedMessage } from '@sapphire/discord.js-utilities';
+import { sendLoadingMessage } from '../../lib/utils';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Get lyrics for a song.',
@@ -35,51 +37,93 @@ export class UserCommand extends SubCommandPluginCommand {
 					.split(' ')
 					.join(' ');
 
-				send(message, 'Loading lyrics...');
+				const response = await sendLoadingMessage(message);
 				const lyric = await this.getLyrics(cleaned);
 
-				const embed = this.container
-					.embed({
-						author: {
-							name: message.author.tag,
-							iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
-						},
-						title,
-						color: 0x00ff00
-					})
-					.setTimestamp();
+				if (lyric.length > 2047) {
+					const paginatedMessage = new PaginatedMessage({
+						template: this.container
+							.embed({
+								author: {
+									name: message.author.tag,
+									iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
+								}
+							})
+							.setTitle(`${title}'s lyrics`)
+							.setColor(0x00ff00)
+							.setThumbnail(message.guild?.iconURL({ dynamic: true })!)
+						// Be sure to add a space so this is offset from the page numbers!
+					});
 
-				Util.splitMessage(lyric, { maxLength: 1024 }).forEach((l) => embed.addField('\u200b', l));
+					Util.splitMessage(lyric, { maxLength: 2047 }).forEach((l) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(l)));
+					await paginatedMessage.run(response, message.author);
+					return response;
+				}
 
-				return send(message, { embeds: [embed] });
+				return send(message, {
+					embeds: [
+						this.container
+							.embed({
+								author: {
+									name: message.author.tag,
+									iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
+								}
+							})
+							.setTitle(`${title}'s lyrics`)
+							.setColor(0x00ff00)
+							.setDescription(lyric)
+							.setThumbnail(message.guild?.iconURL({ dynamic: true })!)
+					]
+				});
 			}
 
 			if (!song) return message.channel.send('Please provide a song name.');
 
-			send(message, 'Loading lyrics...');
+			const response = await sendLoadingMessage(message);
 			const lyric = await this.getLyrics(song);
+			if (lyric.length > 2047) {
+				const paginatedMessage = new PaginatedMessage({
+					template: this.container
+						.embed()
+						.setAuthor({
+							name: message.author.tag,
+							iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
+						})
+						.setTitle(`${song}'s lyrics`)
+						.setColor(0x00ff00)
+						.setThumbnail(message.guild?.iconURL({ dynamic: true })!)
+					// Be sure to add a space so this is offset from the page numbers!
+				});
 
-			const embed = this.container
-				.embed({
-					author: {
-						name: message.author.tag,
-						iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
-					},
-					title: `Results for ${song}`,
-					color: 0x00ff00
-				})
-				.setTimestamp();
+				Util.splitMessage(lyric, { maxLength: 2047 }).forEach((l) => paginatedMessage.addPageEmbed((embed) => embed.setDescription(l)));
 
-			Util.splitMessage(lyric, { maxLength: 1024 }).forEach((l) => embed.addField('\u200b', l));
+				await paginatedMessage.run(response, message.author);
 
-			return send(message, { embeds: [embed] });
+				return response;
+			}
+
+			return send(message, {
+				embeds: [
+					this.container
+						.embed()
+						.setAuthor({
+							name: message.author.tag,
+							iconURL: message.author.displayAvatarURL({ format: 'png', dynamic: true })
+						})
+						.setTitle(`${song}'s lyrics`)
+						.setColor(0x00ff00)
+						.setDescription(lyric)
+						.setThumbnail(message.guild?.iconURL({ dynamic: true })!)
+				]
+			});
 		} catch {
 			return send(message, 'No lyric found.');
 		}
 	}
 
 	private async getLyrics(song: string) {
-		const res = await axios.get(`https://www.musixmatch.com/search/${song}`);
+		const encodedUri = encodeURI(song);
+		const res = await axios.get(`https://www.musixmatch.com/search/${encodedUri}`);
 		const $ = cheerio.load(res.data);
 		const searchLink = 'https://www.musixmatch.com' + $('a.title').first().attr('href');
 
