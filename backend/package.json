@@ -33,6 +33,7 @@
   },
   "scripts": {
     "start": "node ./dist/app.js",
+    "build": "tsc",
     "dev": "tsc-watch --onSuccess \"node ./dist/app.js\""
   }
 }
