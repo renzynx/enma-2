@@ -27,4 +27,8 @@ export class GuildConfig {
   @Field()
   @Column({ default: 80 })
   volume!: number;
+
+  @Field()
+  @Column({ nullable: true })
+  welcome_message!: string;
 }
