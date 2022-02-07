@@ -16,7 +16,10 @@ export class UserEvent extends Listener {
 			if (!channel) return 'null';
 
 			const attachment = await this.helloGen(member);
-			return channel.send({ files: [attachment], content: `${member}` });
+			return channel.send({
+				files: [attachment],
+				content: config?.welcome_message || ''
+			});
 		}
 
 		return 'fucking ts-config go die';

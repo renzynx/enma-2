@@ -14,6 +14,9 @@ export class GuildConfig {
 	@Column({ nullable: true })
 	welcome_channel!: string;
 
+	@Column({ nullable: true })
+	welcome_message!: string;
+
 	@Column({ default: false })
 	delete_message!: boolean;
 
