@@ -15,7 +15,6 @@ declare module '@sapphire/pieces' {
 		config: Collection<string, GuildConfig>;
 		socket: Socket<any, any>;
 		manager: Manager;
-		interval: NodeJS.Timeout;
 		boat: BoatClient;
 		getPlayer: (message: Message) => Player | undefined;
 		embed: (data?: MessageEmbed | MessageEmbedOptions | APIEmbed | undefined) => MessageEmbed;
@@ -89,7 +88,6 @@ container.manager = new Manager({
 })
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
 	.on('trackStart', async (player) => {
-		container.interval = setInterval(() => container.socket.emit('message', player.queue.current), 1000);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
@@ -98,9 +96,6 @@ container.manager = new Manager({
 					text: `Requested by ${player.queue.current?.requester.tag}`,
 					// @ts-ignore
 					icon_url: player.queue.current?.requester.displayAvatarURL({ dynamic: true })
-				},
-				thumbnail: {
-					url: player.queue.current?.thumbnail!
 				},
 				description: `[${player.queue.current?.title}](${player.queue.current?.uri})`,
 				author: { name: 'Now Playing', icon_url: 'https://raw.githubusercontent.com/renzynx/enma/main/assets/gif/spinMain.gif' }
@@ -114,9 +109,6 @@ container.manager = new Manager({
 		}
 
 		return null;
-	})
-	.on('trackEnd', () => {
-		clearInterval(container.interval);
 	})
 	.on('queueEnd', (player) => {
 		if (player.trackRepeat) player.setTrackRepeat(false);
