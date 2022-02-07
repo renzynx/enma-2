@@ -40,6 +40,8 @@ export class UserCommand extends SubCommandPluginCommand {
 				const response = await sendLoadingMessage(message);
 				const lyric = await this.getLyrics(cleaned);
 
+				if (!lyric) return response.edit(`No lyrics found for **${title}**.`);
+
 				if (lyric.length > 2047) {
 					const paginatedMessage = new PaginatedMessage({
 						template: this.container
@@ -81,6 +83,9 @@ export class UserCommand extends SubCommandPluginCommand {
 
 			const response = await sendLoadingMessage(message);
 			const lyric = await this.getLyrics(song);
+
+			if (!lyric) return response.edit('Could not find any lyrics for that song.');
+
 			if (lyric.length > 2047) {
 				const paginatedMessage = new PaginatedMessage({
 					template: this.container
@@ -117,7 +122,7 @@ export class UserCommand extends SubCommandPluginCommand {
 				]
 			});
 		} catch {
-			return send(message, 'No lyric found.');
+			return send(message, `Something went wrong please try this command later.`);
 		}
 	}
 
