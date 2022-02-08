@@ -20,6 +20,10 @@ export class GuildConfig {
   @Column({ nullable: true })
   welcome_channel?: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  welcome_message!: string;
+
   @Field()
   @Column({ default: false })
   delete_message!: boolean;
@@ -30,5 +34,5 @@ export class GuildConfig {
 
   @Field()
   @Column({ nullable: true })
-  welcome_message!: string;
+  ignored_channels!: string[];
 }

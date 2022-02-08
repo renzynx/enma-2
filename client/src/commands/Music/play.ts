@@ -7,7 +7,7 @@ import type { Message } from 'discord.js';
 	description: 'Play a song!',
 	preconditions: ['inVoiceChannel'],
 	aliases: ['p'],
-	detailedDescription: 'play `<song> --s --r` - \n`--s` - Shuffle the queue.\n`--r` - Repeat the queue.',
+	detailedDescription: 'play `<song> --s --r` \n`--s` - Shuffle the queue.\n`--r` - Repeat the queue.',
 	flags: ['shuffle', 's', 'repeat', 'r'],
 	requiredClientPermissions: ['CONNECT', 'SPEAK']
 })
