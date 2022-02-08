@@ -1,4 +1,6 @@
 import './lib/setup';
+import Spotify from 'better-erela.js-spotify';
+import BoatClient from 'boats.js';
 import { Collection, TextChannel, MessageEmbed, MessageEmbedOptions } from 'discord.js';
 import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
@@ -7,8 +9,6 @@ import { io, Socket } from 'socket.io-client';
 import { Manager, Player } from 'erela.js';
 import type { APIEmbed } from 'discord-api-types';
 import type { Message } from 'discord.js';
-import Spotify from 'better-erela.js-spotify';
-import BoatClient from 'boats.js';
 
 declare module '@sapphire/pieces' {
 	interface Container {
