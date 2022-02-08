@@ -22,18 +22,22 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		if (newPrefix.length > 5) return send(message, 'The prefix cannot be longer than 5 characters!');
 
-		const guild = await this.guildRepository.findOne({ guild_id: message.guild!.id });
+		try {
+			const guild = await this.guildRepository.findOne({ guild_id: message.guild!.id });
 
-		if (!guild) {
-			const newGuild = this.guildRepository.create({ guild_id: message.guild!.id, prefix: newPrefix });
-			await this.guildRepository.save(newGuild);
-			this.container.config.set(message.guild!.id, newGuild);
+			if (!guild) {
+				const newGuild = this.guildRepository.create({ guild_id: message.guild!.id, prefix: newPrefix });
+				await this.guildRepository.save(newGuild);
+				this.container.config.set(message.guild!.id, newGuild);
+				return send(message, `Prefix set to \`${newPrefix}\``);
+			}
+
+			guild.prefix = newPrefix;
+			await this.guildRepository.save(guild);
+			this.container.config.set(message.guild!.id, guild);
 			return send(message, `Prefix set to \`${newPrefix}\``);
+		} catch {
+			return send(message, 'An error occured while trying to set the prefix!');
 		}
-
-		guild.prefix = newPrefix;
-		await this.guildRepository.save(guild);
-		this.container.config.set(message.guild!.id, guild);
-		return send(message, `Prefix set to \`${newPrefix}\``);
 	}
 }

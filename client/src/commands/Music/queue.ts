@@ -21,14 +21,24 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		const paginatedMessage = new PaginatedMessage({
 			template: this.container
-				.embed({ author: { name: 'Music queue for ' + message.guild?.name } })
-				.setTitle(`${player.queue.length} songs in queue`)
+				.embed()
+				.setAuthor({ name: 'Music queue for ' + message.guild?.name })
+				.setTitle(`${player.queue.length} ${player.queue.length > 2 ? 'songs' : 'song'} in queue`)
 				.setColor('#FF0000')
 				.setThumbnail(message.guild?.iconURL({ dynamic: true })!)
 			// Be sure to add a space so this is offset from the page numbers!
 		});
 
-		if (!queue.length) return paginatedMessage.addPageEmbed((embed) => embed.setDescription(`No tracks in queue.`));
+		if (!queue.length) {
+			paginatedMessage.addPageEmbed((embed) => {
+				return player.queue.current
+					? embed.addField('🎵   Currently Playing', `[${player.queue.current.title}](${player.queue.current.uri})`)
+					: embed;
+			});
+			await paginatedMessage.run(response, message.author);
+
+			return response;
+		}
 
 		for (let j = 0; j < pages; j++) {
 			const page = queue.slice(j * multiply, (j + 1) * multiply);

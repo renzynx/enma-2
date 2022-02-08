@@ -27,7 +27,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					.toLowerCase()
 					.replace('official video', '')
 					.replace(
-						/\(lyrics|lyric|official music video|audio|official|official video|official video hd|clip officiel|clip|extended|hq\)/g,
+						/\(lyrics|lyric|lyrical|\(official music video\)|\(official video music\)|official music video|audio|official|official video|\(official video\)|official video hd|clip officiel|clip|extended|hq\)/g,
 						''
 					)
 					.replace('(', '')

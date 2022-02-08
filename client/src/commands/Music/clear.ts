@@ -1,23 +1,21 @@
 import { ApplyOptions } from '@sapphire/decorators';
+import { send } from '@sapphire/plugin-editable-commands';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
-	description: 'Go back to previous skipped song.',
+	description: 'Clear the current music queue.',
+	aliases: ['clear', 'clr'],
 	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		if (!player) return null;
+		if (!player) return;
 
-		const previous = player.queue.previous;
+		player.queue.clear();
 
-		if (!previous) return message.channel.send('❌  There is no previous song.');
-
-		player.queue.unshift(previous);
-		player.stop();
-		return message.channel.send('⏮  Skipped to previous song.');
+		return send(message, 'Cleared the queue!');
 	}
 }

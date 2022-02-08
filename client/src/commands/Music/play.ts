@@ -8,7 +8,8 @@ import type { Message } from 'discord.js';
 	preconditions: ['inVoiceChannel'],
 	aliases: ['p'],
 	detailedDescription: 'play `<song> --s --r` - \n`--s` - Shuffle the queue.\n`--r` - Repeat the queue.',
-	flags: ['shuffle', 's', 'repeat', 'r']
+	flags: ['shuffle', 's', 'repeat', 'r'],
+	requiredClientPermissions: ['CONNECT', 'SPEAK']
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {

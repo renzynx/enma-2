@@ -1,25 +1,27 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import type { Message } from 'discord.js';
 import { getRepository } from 'typeorm';
 import { GuildConfig } from '../../entities/guild_config';
+import type { Message } from 'discord.js';
+import type { Args } from '@sapphire/framework';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'General configuration commands.',
 	aliases: ['config', 'cfg', 'configuration', 'configs', 'configurations'],
-	subCommands: ['delete', 'volume', { input: 'msg', default: true }],
+	subCommands: ['delete', 'defaultvolume', { input: 'msg', default: true }],
 	requiredUserPermissions: ['MANAGE_GUILD'],
-	detailedDescription: 'config <delete|volume> <value> - Set config for message deletion and volume.'
+	detailedDescription: 'config `<deleteembed|defaultvolume>` `<value>` - Set config for message deletion and volume.'
 })
 export class UserCommand extends SubCommandPluginCommand {
 	private guildRepository = getRepository(GuildConfig);
 
 	public async msg(message: Message) {
-		return message.channel.send(`Available options: \`delete\` | \`volume\``);
+		return message.channel.send(
+			`Available options: \`deleteembed\` | \`defaultvolume\`\n Enable message delete will delete now playing embed after a song ends.`
+		);
 	}
 
-	public async delete(message: Message, args: Args) {
+	public async deleteembed(message: Message, args: Args) {
 		const options = await args.pick('string').catch(() => null);
 
 		if (!options) return message.channel.send('No options provided, available options `on` | `enable` | `off` | `disable`.');
@@ -52,7 +54,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		}
 	}
 
-	public async volume(message: Message, args: Args) {
+	public async defaultvolume(message: Message, args: Args) {
 		const options = await args.pick('number').catch(() => null);
 
 		if (!options) return message.channel.send('No options provided, available options `number`.');
@@ -65,6 +67,6 @@ export class UserCommand extends SubCommandPluginCommand {
 		guildConfig ? (guildConfig.volume = options) : await this.guildRepository.save({ guild_id: message.guild!.id, volume: options });
 		await this.guildRepository.save(guildConfig!);
 		this.container.config.set(message.guild!.id, guildConfig!);
-		return message.channel.send(`Default volume set to ${options}%`);
+		return message.channel.send(`Default volume set to \`${options}%\``);
 	}
 }

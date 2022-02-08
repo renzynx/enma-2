@@ -4,11 +4,11 @@ import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphi
 import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
-	description: 'Skip the current playing song.',
-	preconditions: ['isPlaying'],
-	aliases: ['s'],
+	description: 'Skip the currently playing song or to a certain song in the queue.',
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying'],
+	aliases: ['s', 'skipto', 'st'],
 	detailedDescription:
-		'skip [position] - Skip the current playing song or skip to a specific song in the queue (get the song position with command `queue`).'
+		'skip `[position]` - Skip the current playing song or skip to a specific song in the queue \n You get the song position with command `queue`.'
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message, args: Args) {
@@ -19,7 +19,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		const pos = await args.pick('number').catch(() => null);
 
 		if (pos) {
-			if (pos > player.queue.length) return message.channel.send('❌  Invalid position.');
+			if (pos > player.queue.length + 1) return message.channel.send('❌  Invalid position.');
 			message.channel.send(`✅  Skipped to **${player.queue[pos - 1].title}**`);
 			return player.stop(pos);
 		}

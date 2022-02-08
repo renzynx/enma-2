@@ -4,7 +4,7 @@ import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Resume the current paused song.',
-	preconditions: ['inVoiceChannel', 'isPlaying', 'sameVoiceChannel']
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {

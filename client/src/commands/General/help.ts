@@ -79,10 +79,10 @@ export class UserCommand extends Command {
 		for (const category of categories) {
 			embed.addField(
 				category,
-				commands
+				`> ${commands
 					.filter((c) => c.category === category)
 					.map((c) => `\`${c.name}\``)
-					.join(' ')
+					.join(' ')}`
 			);
 		}
 

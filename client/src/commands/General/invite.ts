@@ -23,8 +23,9 @@ export class UserCommand extends SubCommandPluginCommand {
 			],
 			thumbnail: { url: this.container.client.user?.displayAvatarURL() },
 			color: 0x00ff00,
-			footer: { text: new Date().toLocaleString() }
+			footer: { text: `Today at ${new Date().toLocaleTimeString().replace(/:\d{2} /, ' ')}` }
 		});
+
 		return message.channel.send({ embeds: [embed] });
 	}
 }
