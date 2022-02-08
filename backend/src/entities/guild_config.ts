@@ -33,6 +33,6 @@ export class GuildConfig {
   volume!: number;
 
   @Field(() => [String], { nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, array: true })
   ignored_channels!: string[];
 }
