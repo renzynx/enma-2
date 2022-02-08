@@ -30,9 +30,11 @@ export class UserCommand extends SubCommandPluginCommand {
 			case 'on':
 			case 'enable':
 				const guildConfig = await this.guildRepository.findOne({ guild_id: message.guild!.id });
-				guildConfig
-					? (guildConfig.delete_message = true)
-					: await this.guildRepository.save({ guild_id: message.guild!.id, delete_message: true });
+
+				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
+
+				guildConfig.delete_message = true;
+
 				await this.guildRepository.save(guildConfig!);
 				this.container.config.set(message.guild!.id, guildConfig!);
 				return message.channel.send(
@@ -61,10 +63,13 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		const guildConfig = await this.guildRepository.findOne({ guild_id: message.guild!.id });
 
+		if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
+
 		if (options > 100) return message.channel.send('Volume cannot be higher than 100.');
 		if (options < 1) return message.channel.send('Volume cannot be lower than 1.');
 
-		guildConfig ? (guildConfig.volume = options) : await this.guildRepository.save({ guild_id: message.guild!.id, volume: options });
+		guildConfig.volume = options;
+
 		await this.guildRepository.save(guildConfig!);
 		this.container.config.set(message.guild!.id, guildConfig!);
 		return message.channel.send(`🔊   Default volume set to \`${options}%\``);
