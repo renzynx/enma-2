@@ -32,7 +32,7 @@ export class GuildConfig {
   @Column({ default: 80 })
   volume!: number;
 
-  @Field(() => [String], { nullable: true })
-  @Column({ nullable: true, array: true })
+  @Field(() => [String], { defaultValue: [] })
+  @Column({ default: [], array: true })
   ignored_channels!: string[];
 }
