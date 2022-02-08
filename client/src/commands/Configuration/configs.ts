@@ -67,6 +67,6 @@ export class UserCommand extends SubCommandPluginCommand {
 		guildConfig ? (guildConfig.volume = options) : await this.guildRepository.save({ guild_id: message.guild!.id, volume: options });
 		await this.guildRepository.save(guildConfig!);
 		this.container.config.set(message.guild!.id, guildConfig!);
-		return message.channel.send(`Default volume set to \`${options}%\``);
+		return message.channel.send(`🔊   Default volume set to \`${options}%\``);
 	}
 }
