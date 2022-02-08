@@ -6,7 +6,8 @@ import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Get the current music queue.',
-	preconditions: ['isPlaying']
+	preconditions: ['isPlaying'],
+	aliases: ['queue', 'q']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
