@@ -5,7 +5,8 @@ import type { Args } from '@sapphire/framework';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Promote a song to the top of the queue.',
-	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying']
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying'],
+	detailedDescription: 'promote <position> - Get the song position with command `queue`.'
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message, args: Args) {
