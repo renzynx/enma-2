@@ -31,8 +31,4 @@ export class GuildConfig {
   @Field()
   @Column({ default: 80 })
   volume!: number;
-
-  @Field(() => [String], { defaultValue: [] })
-  @Column("string", { array: true })
-  ignored_channels!: string[];
 }
