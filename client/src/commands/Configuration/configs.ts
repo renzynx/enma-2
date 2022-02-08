@@ -62,7 +62,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		const guildConfig = await this.guildRepository.findOne({ guild_id: message.guild!.id });
 
 		if (options > 100) return message.channel.send('Volume cannot be higher than 100.');
-		if (options < 0) return message.channel.send('Volume cannot be lower than 0.');
+		if (options < 1) return message.channel.send('Volume cannot be lower than 1.');
 
 		guildConfig ? (guildConfig.volume = options) : await this.guildRepository.save({ guild_id: message.guild!.id, volume: options });
 		await this.guildRepository.save(guildConfig!);

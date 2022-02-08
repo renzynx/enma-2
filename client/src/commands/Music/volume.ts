@@ -18,7 +18,7 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		if (volume) {
 			if (volume > 100) return message.channel.send('❌  The volume cannot be higher than 100.');
-			if (volume < 0) return message.channel.send('❌  The volume cannot be lower than 0.');
+			if (volume < 1) return message.channel.send('❌  The volume cannot be lower than 1.');
 
 			player.setVolume(volume);
 			return message.channel.send(`🔊  Volume set to \`${volume}%\``);
