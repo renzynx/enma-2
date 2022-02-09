@@ -20,17 +20,24 @@ export class UserCommand extends SubCommandPluginCommand {
 			case 'enable':
 			case 'true':
 			case 'yes':
-				await this.guildRepository.update(message.guild!.id, { stay: true });
+				const guildConfig = await this.guildRepository.findOne({ guild_id: message.guild!.id });
+				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
+				guildConfig.stay = true;
+				await this.guildRepository.save(guildConfig!);
 				return message.channel.send('The bot will stay in the voice channel 24/7.');
 
 			case 'off':
 			case 'disable':
 			case 'false':
 			case 'no':
-				await this.guildRepository.update(message.guild!.id, { stay: false });
+				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
+				guildConfig.stay = false;
+				await this.guildRepository.save(guildConfig!);
 				return message.channel.send('The bot will not stay in the voice channel 24/7.');
 			default:
-				return message.channel.send('Please specify whether you want the bot to stay in the voice channel 24/7.');
+				return message.channel.send(
+					'Please specify whether you want the bot to stay in the voice channel 24/7.\n Available options: `on` | `enable` | `true` | `yes` | `off` | `disable` | `false` | `no`'
+				);
 		}
 	}
 }
