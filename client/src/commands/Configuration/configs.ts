@@ -10,6 +10,7 @@ import type { Args } from '@sapphire/framework';
 	aliases: ['config', 'cfg', 'configuration', 'configs', 'configurations'],
 	subCommands: ['delete', 'defaultvolume', { input: 'msg', default: true }],
 	requiredUserPermissions: ['MANAGE_GUILD'],
+	runIn: ['GUILD_TEXT'],
 	detailedDescription: 'config `<deleteembed|defaultvolume>` `<value>` - Set config for message deletion and volume.'
 })
 export class UserCommand extends SubCommandPluginCommand {

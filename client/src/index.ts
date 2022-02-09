@@ -71,8 +71,7 @@ container.manager = new Manager({
 		{
 			host: process.env.LAVALINK_HOST!,
 			port: parseInt(process.env.LAVALINK_PORT!),
-			password: process.env.LAVALINK_PASSWORD!,
-			secure: true
+			password: process.env.LAVALINK_PASSWORD!
 		}
 	],
 	plugins: [
@@ -89,6 +88,7 @@ container.manager = new Manager({
 })
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
 	.on('trackStart', async (player) => {
+		console.log(player.queue.current);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
@@ -115,6 +115,7 @@ container.manager = new Manager({
 		if (player.trackRepeat) player.setTrackRepeat(false);
 		if (player.queueRepeat) player.setQueueRepeat(false);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
+		if (container.config.get(channel.guildId)?.stay) return channel && channel.send('Queue ended');
 		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
 		return player.destroy();
 	});
@@ -123,6 +124,24 @@ const main = async () => {
 	try {
 		container.socket.on('updatePrefix', async (data: GuildConfig) => {
 			container.config.set(data.guild_id, data);
+		});
+
+		container.socket.on('trackQuery', async (data: any) => {
+			const player = container.manager.players.get(data.id);
+
+			if (!player) return container.socket.emit('playing', null);
+
+			const res = await container.manager.search(data.song);
+
+			if (!res.tracks.length) return container.socket.emit('playing', null);
+
+			const track = res.tracks[0];
+
+			if (!track) return container.socket.emit('playing', null);
+
+			player.queue.add(track);
+
+			return container.socket.emit('playing', player.queue);
 		});
 
 		await createConnection({
@@ -147,6 +166,7 @@ const main = async () => {
 		client.logger.info('Logging in');
 		await client.login();
 		client.logger.info('Logged in');
+
 		if (client.user?.id! === '772690931539247104') container.boat.postStats(client.guilds.cache.size, '772690931539247104');
 	} catch (error) {
 		client.logger.fatal(error);

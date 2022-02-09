@@ -22,4 +22,7 @@ export class GuildConfig {
 
 	@Column({ default: 80 })
 	volume!: number;
+
+	@Column({ default: false })
+	stay!: boolean;
 }
