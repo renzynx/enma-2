@@ -13,7 +13,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	private readonly guildRepository = getRepository(GuildConfig);
 
 	public async messageRun(message: Message, args: Args) {
-		const option = await args.pick('string');
+		const option = await args.pick('string').catch(() => null);
 
 		switch (option) {
 			case 'on':
