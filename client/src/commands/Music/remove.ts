@@ -20,7 +20,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		if (pos) {
 			if (pos > player.queue.length + 1) return message.channel.send('❌  Invalid position.');
 			message.channel.send(`✅  Removed ${player.queue[pos - 1].title}`);
-			return player.queue.remove(pos);
+			return player.queue.remove(pos - 1);
 		}
 
 		return message.channel.send('❌  You must specify a position (use command `queue` to get the position).');
