@@ -87,18 +87,17 @@ container.manager = new Manager({
 	}
 })
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
-	.on('trackStart', async (player) => {
-		console.log(player.queue.current);
+	.on('trackStart', async (player, track) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
 				footer: {
 					// @ts-ignore
-					text: `Requested by ${player.queue.current?.requester.tag}`,
+					text: `Requested by ${track.requester.tag}`,
 					// @ts-ignore
-					icon_url: player.queue.current?.requester.displayAvatarURL({ dynamic: true })
+					icon_url: track.requester.displayAvatarURL({ dynamic: true })
 				},
-				description: `[${player.queue.current?.title}](${player.queue.current?.uri})`,
+				description: `[${track.title}](${track.uri})`,
 				author: { name: 'Now Playing', icon_url: 'https://raw.githubusercontent.com/renzynx/enma/main/assets/gif/spinMain.gif' }
 			})
 			.setColor('#808bed');
@@ -112,10 +111,13 @@ container.manager = new Manager({
 		return null;
 	})
 	.on('queueEnd', (player) => {
-		if (player.trackRepeat) player.setTrackRepeat(false);
-		if (player.queueRepeat) player.setQueueRepeat(false);
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
-		if (container.config.get(channel.guildId)?.stay) return channel && channel.send('Queue ended');
+		const config = container.config.get(channel.guild.id);
+		if (config && config.stay) {
+			if (player.trackRepeat) player.setTrackRepeat(false);
+			if (player.queueRepeat) player.setQueueRepeat(false);
+			return channel && channel.send('Queue ended');
+		}
 		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
 		return player.destroy();
 	});
