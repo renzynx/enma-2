@@ -24,6 +24,7 @@ export class UserCommand extends SubCommandPluginCommand {
 				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
 				guildConfig.stay = true;
 				await this.guildRepository.save(guildConfig!);
+				this.container.config.set(message.guild!.id, guildConfig!);
 				return message.channel.send('The bot will stay in the voice channel 24/7.');
 
 			case 'off':
@@ -33,6 +34,7 @@ export class UserCommand extends SubCommandPluginCommand {
 				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
 				guildConfig.stay = false;
 				await this.guildRepository.save(guildConfig!);
+				this.container.config.set(message.guild!.id, guildConfig!);
 				return message.channel.send('The bot will not stay in the voice channel 24/7.');
 			default:
 				return message.channel.send(
