@@ -47,7 +47,8 @@ const client = new SapphireClient({
 
 		return guildCfg?.prefix!;
 	},
-	regexPrefix: /^(hey +)?enma[,! ]/i,
+	presence: { activities: [{ name: 'to Enma, help', type: 'LISTENING' }] },
+	regexPrefix: /^(hey +)?Enma[,! ]/i,
 	caseInsensitiveCommands: true,
 	logger: {
 		level: LogLevel.Debug
