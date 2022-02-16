@@ -117,13 +117,6 @@ container.manager = new Manager({
 
 		return null;
 	})
-	.on('trackEnd', (player) => {
-		player.node.send({
-			op: 'filters',
-			guildId: player.guild
-		});
-		return container.context.delete(player.guild);
-	})
 	.on('queueEnd', (player) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const config = container.config.get(channel.guild.id);
