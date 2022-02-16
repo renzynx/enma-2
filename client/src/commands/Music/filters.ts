@@ -6,7 +6,8 @@ import type { Message } from 'discord.js';
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'A basic command',
 	aliases: ['filter'],
-	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying']
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying'],
+	detailedDescription: 'filter <option> - Use this command without any option specified to get all options.'
 })
 export class UserCommand extends SubCommandPluginCommand {
 	async messageRun(message: Message, args: Args) {
