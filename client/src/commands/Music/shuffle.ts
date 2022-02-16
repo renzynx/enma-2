@@ -10,7 +10,9 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.manager.players.get(message.guild?.id!);
 
-		player?.queue.shuffle();
+		if (!player || !player.queue.length) return message.channel.send('Im not playing anything!');
+
+		player.queue.shuffle();
 
 		return message.channel.send(`${player?.queue.length} songs has been shuffled in the queue!`);
 	}

@@ -13,6 +13,7 @@ import type { Message } from 'discord.js';
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
+		context: Collection<string, any>;
 		socket: Socket<any, any>;
 		manager: Manager;
 		boat: BoatClient;
@@ -23,6 +24,7 @@ declare module '@sapphire/pieces' {
 
 container.boat = new BoatClient(process.env.BOAT_TOKEN!);
 container.config = new Collection();
+container.context = new Collection();
 container.getPlayer = (message) => container.manager.players.get(message.guild?.id!);
 container.embed = (data) => new MessageEmbed(data);
 
@@ -71,7 +73,9 @@ container.manager = new Manager({
 		{
 			host: process.env.LAVALINK_HOST!,
 			port: parseInt(process.env.LAVALINK_PORT!),
-			password: process.env.LAVALINK_PASSWORD!
+			password: process.env.LAVALINK_PASSWORD!,
+			secure: true,
+			identifier: '24GB VPS'
 		}
 	],
 	plugins: [
@@ -87,6 +91,8 @@ container.manager = new Manager({
 	}
 })
 	.on('nodeConnect', (node) => client.logger.info(`Connected to ${node.options.identifier}`))
+	.on('nodeError', (node, error) => client.logger.error(`${node.options.identifier} errored: ${error}`))
+	.on('nodeDisconnect', (node) => client.logger.info(`Disconnected from ${node.options.identifier}`))
 	.on('trackStart', async (player, track) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
@@ -110,6 +116,13 @@ container.manager = new Manager({
 
 		return null;
 	})
+	.on('trackEnd', (player) => {
+		player.node.send({
+			op: 'filters',
+			guildId: player.guild
+		});
+		return container.context.delete(player.guild);
+	})
 	.on('queueEnd', (player) => {
 		const channel = client.channels.cache.get(player.textChannel!) as TextChannel;
 		const config = container.config.get(channel.guild.id);
@@ -119,6 +132,7 @@ container.manager = new Manager({
 			return channel && channel.send('Queue ended');
 		}
 		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
+		container.context.delete(player.guild);
 		return player.destroy();
 	});
 

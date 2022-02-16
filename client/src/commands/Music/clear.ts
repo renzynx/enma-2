@@ -14,6 +14,8 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		if (!player) return;
 
+		if (!player.queue.length) return send(message, 'There is no song in the queue!');
+
 		player.queue.clear();
 
 		return send(message, 'Cleared the queue!');
