@@ -5,9 +5,8 @@ import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Remove duplicate songs from the queue.',
-	aliases: ['remove-duplicates', 'rmdupes', 'rmd'],
-	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'sameVoiceChannel'],
-	runIn: ['GUILD_TEXT']
+	aliases: ['remove-duplicates', 'rmdupes', 'rmd', 'removedupes'],
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'sameVoiceChannel']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {

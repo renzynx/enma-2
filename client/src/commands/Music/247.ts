@@ -8,6 +8,7 @@ import { GuildConfig } from '../../entities/guild_config';
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Make the bot stay in the voice channel 24/7.',
 	requiredUserPermissions: ['MANAGE_GUILD'],
+	aliases: ['stay'],
 	detailedDescription: '247 <on/off> - Enable or disable the bot to stay in the voice channel 24/7.'
 })
 export class UserCommand extends SubCommandPluginCommand {

@@ -1,5 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
+import { send } from '@sapphire/plugin-editable-commands';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import type { Message } from 'discord.js';
 
@@ -11,6 +12,10 @@ import type { Message } from 'discord.js';
 		'`filter <option>` - Use this command without any option specified to get all options.\n Use `filter reset` to turn off filter.'
 })
 export class UserCommand extends SubCommandPluginCommand {
+	async sleep(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
 	async messageRun(message: Message, args: Args) {
 		const filters = await args.pick('string').catch(() => null);
 
@@ -34,7 +39,9 @@ export class UserCommand extends SubCommandPluginCommand {
 							rotationHz: 0.2
 						}
 					});
-					return message.channel.send('Filter `8d` applied!');
+					send(message, 'Applying `8d` filter...');
+					await this.sleep(5000);
+					return send(message, 'Filter `8d` applied!');
 
 				case 'pop':
 					this.container.context.set(message.guild!.id, {
@@ -61,7 +68,9 @@ export class UserCommand extends SubCommandPluginCommand {
 							{ band: 13, gain: 0 }
 						]
 					});
-					return message.channel.send('Filter `pop` applied!');
+					send(message, 'Applying `pop` filter...');
+					await this.sleep(5000);
+					return send(message, 'Filter `pop` applied!');
 
 				case 'nightcore':
 					this.container.context.set(message.guild!.id, {
@@ -77,8 +86,9 @@ export class UserCommand extends SubCommandPluginCommand {
 							rate: 1
 						}
 					});
-					return message.channel.send('Filter `nightcore` applied!');
-
+					send(message, 'Applying `nightcore` filter...');
+					await this.sleep(5000);
+					return send(message, 'Filter `nightcore` applied!');
 				case 'bassboost':
 					this.container.context.set(message.guild!.id, {
 						filter: 'bassboost'
@@ -104,6 +114,8 @@ export class UserCommand extends SubCommandPluginCommand {
 							{ band: 13, gain: 0 }
 						]
 					});
+					send(message, 'Applying `bassboost` filter...');
+					await this.sleep(5000);
 					return message.channel.send('Filter `bassboost` applied!');
 
 				case 'vaporwave':
@@ -121,8 +133,9 @@ export class UserCommand extends SubCommandPluginCommand {
 						timescale: { pitch: 0.5 },
 						tremolo: { depth: 0.3, frequency: 14 }
 					});
-					return message.channel.send('Filter `vaporwave` applied!');
-
+					send(message, 'Applying `vaporwave` filter...');
+					await this.sleep(5000);
+					return send(message, 'Filter `vaporwave` applied!');
 				case 'reset':
 				case 'clear':
 				case 'remove':
@@ -135,8 +148,9 @@ export class UserCommand extends SubCommandPluginCommand {
 						op: 'filters',
 						guildId: message.guild!.id
 					});
-					return message.channel.send('Filter has been reset!');
-
+					send(message, 'Clearing filter...');
+					await this.sleep(5000);
+					return send(message, 'Filter has been cleared!');
 				default:
 					const context = this.container.context.get(message.guild!.id);
 					const eb = this.container

@@ -25,15 +25,13 @@ export class UserCommand extends Command {
 
 		let res;
 
-		const player =
-			this.container.manager.players.get(message.guild.id) ??
-			this.container.manager.create({
-				guild: message.guild.id,
-				voiceChannel: message.member.voice.channelId!,
-				textChannel: message.channel.id,
-				selfDeafen: true,
-				volume: this.container.config.get(message.guild.id)?.volume
-			});
+		const player = this.container.manager.create({
+			guild: message.guild.id,
+			voiceChannel: message.member.voice.channelId!,
+			textChannel: message.channel.id,
+			selfDeafen: true,
+			volume: this.container.config.get(message.guild.id)?.volume
+		});
 
 		try {
 			res = await this.container.manager.search(song, message.author);
@@ -41,8 +39,8 @@ export class UserCommand extends Command {
 			if (res.loadType === 'LOAD_FAILED') throw res.exception;
 			else if (res.loadType === 'PLAYLIST_LOADED') {
 				if (player.state !== 'CONNECTED') player.connect();
+				if (shuffle) res.tracks.sort(() => 0.5 - Math.random());
 				player.queue.add(res.tracks);
-				if (shuffle) player.queue.shuffle();
 				if (repeat) player.setQueueRepeat(true);
 				if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
 
