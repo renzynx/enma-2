@@ -7,13 +7,15 @@ import { sendLoadingMessage } from '../../lib/utils';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Generate a help message for the bot.',
+	flags: ['page'],
 	detailedDescription: 'help `[command]` - If a command is specified, it will show the help for that command.'
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message, args: Args) {
 		const command = await args.pick('string').catch(() => null);
+		const displayPage = args.getFlags('page');
 
-		if (command === 'newHelp') return this.newHelp(message);
+		if (displayPage) return this.newHelp(message);
 
 		const config = this.container.config.get(message.guild!.id);
 
