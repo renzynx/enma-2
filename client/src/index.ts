@@ -1,5 +1,4 @@
 import './lib/setup';
-import './lib/player';
 import BoatClient from 'boats.js';
 import Spotify from 'better-erela.js-spotify';
 import AppleMusic from 'better-erela.js-apple';
