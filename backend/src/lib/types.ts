@@ -102,3 +102,48 @@ export class GuildChannel {
   @Field()
   rate_limit_per_user: string;
 }
+
+ObjectType();
+class User {
+  @Field()
+  id: string;
+
+  @Field()
+  username: string;
+
+  @Field()
+  discriminator: string;
+
+  @Field()
+  avatar: string;
+}
+
+ObjectType();
+export class Track {
+  @Field()
+  track: string;
+
+  @Field()
+  title: string;
+
+  @Field()
+  author: string;
+
+  @Field()
+  duration: number;
+
+  @Field()
+  uri: string;
+
+  @Field()
+  thumbnail: string;
+
+  @Field()
+  isStream: boolean;
+
+  @Field()
+  isSeekable: boolean;
+
+  @Field((_type) => User, { nullable: true })
+  requester: User;
+}

@@ -1,9 +1,9 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import type { Message } from 'discord.js';
-import type { Args } from '@sapphire/framework';
 import { getRepository } from 'typeorm';
 import { GuildConfig } from '../../entities/guild_config';
+import type { Message } from 'discord.js';
+import type { Args } from '@sapphire/framework';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Make the bot stay in the voice channel 24/7.',
@@ -33,10 +33,11 @@ export class UserCommand extends SubCommandPluginCommand {
 			case 'disable':
 			case 'false':
 			case 'no':
-				if (!guildConfig) return message.channel.send('Something went wrong, please try again.');
-				guildConfig.stay = false;
-				await this.guildRepository.save(guildConfig!);
-				this.container.config.set(message.guild!.id, guildConfig!);
+				const guildCFG = await this.guildRepository.findOne({ guild_id: message.guild!.id });
+				if (!guildCFG) return message.channel.send('Something went wrong, please try again.');
+				guildCFG.stay = false;
+				await this.guildRepository.save(guildCFG!);
+				this.container.config.set(message.guild!.id, guildCFG!);
 				return message.channel.send('The bot will not stay in the voice channel 24/7.');
 			default:
 				return message.channel.send(

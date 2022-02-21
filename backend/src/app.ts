@@ -141,9 +141,7 @@ const main = async () => {
   server.listen(PORT, () =>
     console.log(
       `API is running at ${
-        process.env.NODE_ENV === "production"
-          ? "https://api.renzynx.space"
-          : "http://"
+        __prod__ ? "https://api.renzynx.space" : "http://"
       }localhost:${PORT}`
     )
   );

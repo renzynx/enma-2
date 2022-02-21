@@ -8,6 +8,7 @@ import { sendLoadingMessage } from '../../lib/utils';
 @ApplyOptions<CommandOptions>({
 	description: 'Generate a help message for the bot.',
 	flags: ['page'],
+	aliases: ['h', 'help'],
 	detailedDescription: 'help `[command]` - If a command is specified, it will show the help for that command.'
 })
 export class UserCommand extends Command {
@@ -120,16 +121,18 @@ export class UserCommand extends Command {
 		categories = this.removeDuplicates(categories);
 
 		for (const category of categories) {
-			paginatedMessage.addPageEmbed((embed) =>
-				embed //
-					.setDescription(
-						commands
-							.filter((c) => c.category === category)
-							.map((c) => `\`${c.name}\``)
-							.join(' ')
-					)
-					.setTitle(category + ' Commands')
-			);
+			paginatedMessage
+				.addPageEmbed((embed) =>
+					embed //
+						.setDescription(
+							commands
+								.filter((c) => c.category === category)
+								.map((c) => `\`${c.name}\``)
+								.join(' ')
+						)
+						.setTitle(category + ' Commands')
+				)
+				.setSelectMenuOptions((index) => ({ label: categories[index - 1], description: `Page ${index}` }));
 		}
 
 		await paginatedMessage.run(response, message.author);
