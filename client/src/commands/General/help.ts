@@ -121,18 +121,16 @@ export class UserCommand extends Command {
 		categories = this.removeDuplicates(categories);
 
 		for (const category of categories) {
-			paginatedMessage
-				.addPageEmbed((embed) =>
-					embed //
-						.setDescription(
-							commands
-								.filter((c) => c.category === category)
-								.map((c) => `\`${c.name}\``)
-								.join(' ')
-						)
-						.setTitle(category + ' Commands')
-				)
-				.setSelectMenuOptions((index) => ({ label: categories[index - 1], description: `Page ${index}` }));
+			paginatedMessage.addPageEmbed((embed) =>
+				embed //
+					.setDescription(
+						commands
+							.filter((c) => c.category === category)
+							.map((c) => `\`${c.name}\``)
+							.join(' ')
+					)
+					.setTitle(category + ' Commands')
+			);
 		}
 
 		await paginatedMessage.run(response, message.author);

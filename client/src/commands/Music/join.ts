@@ -1,5 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptions } from '@sapphire/framework';
+import { canJoinVoiceChannel } from '@sapphire/discord.js-utilities';
 import type { Message } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
@@ -8,6 +9,8 @@ import type { Message } from 'discord.js';
 })
 export class UserCommand extends Command {
 	public async messageRun(message: Message) {
+		if (!canJoinVoiceChannel(message.member!.voice.channel))
+			return message.channel.send("Looks like i don't have the permission to join that voice channel!");
 		const config = this.container.config.get(message.guild!.id!);
 
 		const player =
