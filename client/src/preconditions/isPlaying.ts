@@ -5,7 +5,7 @@ export class UserPrecondition extends Precondition {
 	public async run(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		return player ? this.ok() : this.error({ message: `I'm not playing anything!` });
+		return player && player.playing && !player.paused ? this.ok() : this.error({ message: `I'm not playing anything!` });
 	}
 }
 

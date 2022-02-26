@@ -12,7 +12,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		if (!player || !player.queue.length) return message.channel.send('Im not playing anything!');
+		if (!player || !player.queue.current) return message.channel.send('Im not playing anything!');
 
 		const embed = this.container.embed({
 			author: {
