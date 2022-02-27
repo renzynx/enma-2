@@ -4,14 +4,14 @@ import type { Message } from 'discord.js';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Enable autoplay',
-	preconditions: ['inVoiceChannel'],
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'isPlaying'],
 	aliases: ['ap']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		if (!player || !player.playing) return message.channel.send('Im not playing anything!');
+		if (!player) return message.channel.send('Im not playing anything!');
 
 		const auto = player.get('autoplay') ?? false;
 

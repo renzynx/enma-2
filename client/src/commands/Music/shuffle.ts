@@ -10,7 +10,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.manager.players.get(message.guild?.id!);
 
-		if (!player || !player.queue.length) return message.channel.send('Im not playing anything!');
+		if (!player || !player.queue.length) return message.channel.send('The queue is empty!');
 
 		player.queue.shuffle();
 

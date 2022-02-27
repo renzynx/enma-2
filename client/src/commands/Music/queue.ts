@@ -14,7 +14,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		const response = await sendLoadingMessage(message);
 		const player = this.container.getPlayer(message);
 
-		if (!player) return;
+		if (!player || !player.queue.length) return response.edit('The queue is empty!');
 
 		const multiply = 10;
 		const pages = Math.ceil(player.queue.length / multiply);

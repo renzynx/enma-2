@@ -10,7 +10,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		if (!player) return null;
+		if (!player) return message.channel.send('The queue is empty!');
 
 		const previous = player.queue.previous;
 

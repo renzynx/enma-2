@@ -6,13 +6,13 @@ import type { Message } from 'discord.js';
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Remove duplicate songs from the queue.',
 	aliases: ['remove-duplicates', 'rmdupes', 'rmd', 'removedupes'],
-	preconditions: ['inVoiceChannel', 'sameVoiceChannel', 'sameVoiceChannel']
+	preconditions: ['inVoiceChannel', 'sameVoiceChannel']
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
 		const player = this.container.getPlayer(message);
 
-		if (!player) return;
+		if (!player || !player.queue.length) return send(message, 'The queue is empty!');
 
 		send(message, 'Removing duplicate songs from the queue...');
 

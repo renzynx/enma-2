@@ -11,7 +11,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message, args: Args) {
 		const player = this.container.getPlayer(message);
 
-		if (!player || !player.queue.length) return message.channel.send('Im not playing anything!');
+		if (!player || !player.queue.current) return message.channel.send('Im not playing anything!');
 
 		const options = await args.pick('string').catch(() => null);
 

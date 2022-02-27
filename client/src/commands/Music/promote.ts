@@ -12,7 +12,7 @@ export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message, args: Args) {
 		const player = this.container.getPlayer(message);
 
-		if (!player || !player.queue.length) return message.channel.send('Im not playing anything!');
+		if (!player || !player.queue.length) return message.channel.send('The queue is empty!');
 
 		const pos = await args.pick('number').catch(() => null);
 
