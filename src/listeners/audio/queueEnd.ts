@@ -15,7 +15,7 @@ export class UserEvent extends Listener {
 
 	public async run(player: Player) {
 		const autoplay = player.get('autoplay');
-
+		this.container.current.delete(player.guild);
 		if (autoplay) {
 			const channel = this.container.client.channels.cache.get(player.textChannel!) as TextChannel;
 			channel.send('🎵  Autoplay enabled, finding similar songs...');

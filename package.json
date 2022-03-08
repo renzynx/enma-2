@@ -29,6 +29,7 @@
 		"node-abort-controller": "^3.0.1",
 		"pg": "^8.7.1",
 		"reflect-metadata": "^0.1.13",
+		"socket.io": "^4.4.1",
 		"string-progressbar": "^1.0.4",
 		"typeorm": "^0.2.41",
 		"undici": "^4.12.2"

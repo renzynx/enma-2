@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import type { Message } from 'discord.js';
+import type { Message, User } from 'discord.js';
 import { splitBar } from 'string-progressbar';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
@@ -25,10 +25,8 @@ export class UserCommand extends SubCommandPluginCommand {
 				url: player.queue.current?.thumbnail!
 			},
 			footer: {
-				// @ts-ignore
-				text: 'Requested by ' + player.queue.current?.requester.tag,
-				// @ts-ignore
-				icon_url: player.queue.current?.requester.avatarURL({ dynamic: true })
+				text: 'Requested by ' + (player.queue.current?.requester as User).tag,
+				icon_url: (player.queue.current?.requester as User).avatarURL({ dynamic: true })!
 			},
 			fields: [
 				{

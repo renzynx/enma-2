@@ -7,25 +7,33 @@ import { Collection, MessageEmbed, MessageEmbedOptions } from 'discord.js';
 import { container, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
 import { GuildConfig } from './entities/guild_config';
+import { Server } from 'socket.io';
+import httpServer from 'http';
+import { PORT } from './lib/constants';
 import type { APIEmbed } from 'discord-api-types';
 import type { Message } from 'discord.js';
 import type { Player } from 'erela.js';
+import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import type { CustomTrack } from './lib/types';
 
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
 		context: Collection<string, any>;
+		current: Collection<string, CustomTrack>;
 		manager: Manager;
 		node: Node;
 		boat: BoatClient;
 		getPlayer: (message: Message) => Player | undefined;
 		embed: (data?: MessageEmbed | MessageEmbedOptions | APIEmbed | undefined) => MessageEmbed;
+		ws: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 	}
 }
 
 container.boat = new BoatClient(process.env.BOAT_TOKEN!);
 container.config = new Collection();
 container.context = new Collection();
+container.current = new Collection();
 container.getPlayer = (message) => container.manager.players.get(message.guild?.id!);
 container.embed = (data) => new MessageEmbed(data);
 
@@ -94,6 +102,36 @@ container.manager = new Manager({
 
 const main = async () => {
 	try {
+		const server = httpServer.createServer();
+		container.ws = new Server(server, { cors: { origin: '*' } });
+		container.ws.on('connection', (socket) => {
+			socket.on('playing', (data: string) => {
+				const player = container.manager.players.get(data);
+				if (!player) return;
+				const track = container.current.get(data);
+				container.ws.emit(data, track);
+			});
+
+			socket.on('playback', (data: string) => {
+				const player = container.manager.players.get(data);
+				if (!player) return;
+				!player.paused ? player.pause(true) : player.pause(false);
+			});
+
+			socket.on('skip', (data: string) => {
+				const player = container.manager.players.get(data);
+				if (!player) return;
+				player.stop();
+			});
+
+			socket.on('previous', (data: string) => {
+				const player = container.manager.players.get(data);
+				if (!player || !player.queue.previous) return;
+				player.queue.unshift(player.queue.previous);
+				player.stop();
+			});
+		});
+
 		await createConnection({
 			type: 'postgres',
 			host: process.env.DATABASE_HOST,
@@ -102,7 +140,7 @@ const main = async () => {
 			password: process.env.DATABASE_PASSWORD,
 			database: process.env.DATABASE,
 			entities: [GuildConfig],
-			synchronize: process.env.NODE_ENV === 'production' ? false : true
+			synchronize: process.env.NODE_ENV === 'development'
 		}).then(() => client.logger.info('Connected to POSTGRESQL database'));
 
 		const guildRepository = getRepository(GuildConfig);
@@ -115,7 +153,7 @@ const main = async () => {
 		await client.login();
 		client.logger.info('Logged in');
 
-		if (client.user?.id! === '772690931539247104') container.boat.postStats(client.guilds.cache.size, '772690931539247104');
+		server.listen(PORT, () => client.logger.info(`Server is listening on port ${PORT}`));
 	} catch (error) {
 		client.logger.fatal(error);
 		client.destroy();

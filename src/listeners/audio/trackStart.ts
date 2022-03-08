@@ -14,6 +14,9 @@ export class UserEvent extends Listener {
 	}
 
 	public async run(player: Player, track: Track) {
+		const customTrackData = { ...track, position: player.position };
+		this.container.current.set(player.guild, customTrackData);
+		this.container.ws.emit(player.guild, customTrackData);
 		const channel = this.container.client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
