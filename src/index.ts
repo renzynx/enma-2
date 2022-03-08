@@ -4,7 +4,7 @@ import Spotify from 'better-erela.js-spotify';
 import AppleMusic from 'better-erela.js-apple';
 import { Manager } from 'erela.js';
 import { Collection, MessageEmbed, MessageEmbedOptions } from 'discord.js';
-import { container, SapphireClient } from '@sapphire/framework';
+import { container, LogLevel, SapphireClient } from '@sapphire/framework';
 import { createConnection, getRepository } from 'typeorm';
 import { GuildConfig } from './entities/guild_config';
 import { Server } from 'socket.io';
@@ -71,7 +71,10 @@ const client = new SapphireClient({
 		'DIRECT_MESSAGES',
 		'DIRECT_MESSAGE_REACTIONS'
 	],
-	typing: true
+	typing: true,
+	logger: {
+		level: LogLevel.Debug
+	}
 });
 
 container.manager = new Manager({
