@@ -133,6 +133,12 @@ const main = async () => {
 				player.queue.unshift(player.queue.previous);
 				player.stop();
 			});
+
+			socket.on('volume', (data: { id: string; volume: string }) => {
+				const player = container.manager.players.get(data.id);
+				if (!player) return;
+				player.setVolume(parseInt(data.volume, 10));
+			});
 		});
 
 		await createConnection({

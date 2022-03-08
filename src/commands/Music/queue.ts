@@ -3,6 +3,7 @@ import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { sendLoadingMessage } from '../../lib/utils';
 import type { Message } from 'discord.js';
+import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	description: 'Get the current music queue.',
@@ -14,7 +15,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		const response = await sendLoadingMessage(message);
 		const player = this.container.getPlayer(message);
 
-		if (!player || !player.queue.length) return response.edit('The queue is empty!');
+		if (!player) return send(message, 'I am not playing anything right now.');
 
 		const multiply = 10;
 		const pages = Math.ceil(player.queue.length / multiply);
@@ -33,7 +34,13 @@ export class UserCommand extends SubCommandPluginCommand {
 		if (!queue.length) {
 			paginatedMessage.addPageEmbed((embed) => {
 				return player.queue.current
-					? embed.addField('🎵   Currently Playing', `[${player.queue.current.title}](${player.queue.current.uri})`)
+					? embed
+							//
+							.addField('🎵   Currently Playing', `[${player.queue.current.title}](${player.queue.current.uri})`)
+							.addField(
+								'\u200b',
+								`Did you know? you can also manage your music queue with a web interface [Click Here](https://beta.renzynx.space/dashboard/${message.guild?.id}/music).`
+							)
 					: embed;
 			});
 			await paginatedMessage.run(response, message.author);
@@ -45,7 +52,13 @@ export class UserCommand extends SubCommandPluginCommand {
 			const page = queue.slice(j * multiply, (j + 1) * multiply);
 			paginatedMessage.addPageEmbed((embed) => {
 				player.queue.current
-					? embed.addField('🎵   Currently Playing', `[${player.queue.current.title}](${player.queue.current.uri})`)
+					? embed
+							//
+							.addField('🎵   Currently Playing', `[${player.queue.current.title}](${player.queue.current.uri})`)
+							.addField(
+								'\u200b',
+								`Did you know? you can also manage your music queue with a web interface [Click Here](https://beta.renzynx.space/dashboard/${message.guild?.id}/music).`
+							)
 					: null;
 
 				player.queueRepeat ? embed.addField('Queue Repeat', ':white_check_mark:') : null;

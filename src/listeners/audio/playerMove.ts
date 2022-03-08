@@ -14,7 +14,6 @@ export class UserEvent extends Listener {
 
 	public run(player: Player, _oldChannel: string, newChannel: string) {
 		if (!newChannel) return player.destroy();
-
 		return player.setVoiceChannel(newChannel);
 	}
 }
