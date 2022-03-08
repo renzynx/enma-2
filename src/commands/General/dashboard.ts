@@ -8,6 +8,6 @@ import type { Message } from 'discord.js';
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async messageRun(message: Message) {
-		return send(message, 'https://renzynx.space');
+		return send(message, 'https://beta.renzynx.space');
 	}
 }
