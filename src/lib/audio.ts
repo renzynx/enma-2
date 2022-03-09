@@ -55,11 +55,11 @@ export function AudioSocket(container: Container) {
 			}
 		});
 
-		socket.on('playing', (data: { id: string; uid: string | null }) => {
-			let player = container.manager.players.get(data.id);
+		socket.on('playing', (data: string) => {
+			let player = container.manager.players.get(data);
 			if (!player) return;
-			const track = container.current.get(data.id);
-			container.ws.emit(data.id, { track, player: true, defaultVolume: player.volume });
+			const track = container.current.get(data);
+			container.ws.emit(data, { ...track, player: true, defaultVolume: player.volume });
 		});
 
 		socket.on('playback', async (data: { id: string; uid: string }) => {
