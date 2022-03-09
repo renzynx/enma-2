@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { container, Listener, ListenerOptions } from '@sapphire/framework';
-import type { TextChannel } from 'discord.js';
+import type { TextChannel, User } from 'discord.js';
 import type { Player, Track } from 'erela.js';
 
 @ApplyOptions<ListenerOptions>({})
@@ -20,12 +20,12 @@ export class UserEvent extends Listener {
 		const channel = this.container.client.channels.cache.get(player.textChannel!) as TextChannel;
 		const embed = container
 			.embed({
-				footer: {
-					// @ts-ignore
-					text: `Requested by ${track.requester.tag}`,
-					// @ts-ignore
-					icon_url: track.requester.displayAvatarURL({ dynamic: true })
-				},
+				footer: track.requester
+					? {
+							text: `Requested by ${(track.requester as User).tag}`,
+							icon_url: (track.requester as User).displayAvatarURL({ dynamic: true })
+					  }
+					: undefined,
 				description: `[${track.title}](${track.uri})`,
 				author: { name: 'Now Playing', icon_url: 'https://raw.githubusercontent.com/renzynx/enma/main/assets/gif/spinMain.gif' }
 			})

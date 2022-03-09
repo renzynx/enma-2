@@ -27,6 +27,8 @@ export class UserCommand extends Command {
 
 		player.connect();
 
+		this.container.ws.emit(message.guild?.id!, { track: null, player: true });
+
 		return message.channel.send(`Connected to **${message.member!.voice.channel?.name}**`);
 	}
 }

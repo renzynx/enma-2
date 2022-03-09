@@ -15,6 +15,7 @@ import type { Message } from 'discord.js';
 import type { Player } from 'erela.js';
 import type { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import type { CustomTrack } from './lib/types';
+import { AudioSocket } from './lib/audio';
 
 declare module '@sapphire/pieces' {
 	interface Container {
@@ -107,39 +108,7 @@ const main = async () => {
 	try {
 		const server = httpServer.createServer();
 		container.ws = new Server(server, { cors: { origin: '*' } });
-		container.ws.on('connection', (socket) => {
-			socket.on('playing', (data: string) => {
-				const player = container.manager.players.get(data);
-				if (!player) return;
-				const track = container.current.get(data);
-				container.ws.emit(data, track);
-			});
-
-			socket.on('playback', (data: string) => {
-				const player = container.manager.players.get(data);
-				if (!player) return;
-				!player.paused ? player.pause(true) : player.pause(false);
-			});
-
-			socket.on('skip', (data: string) => {
-				const player = container.manager.players.get(data);
-				if (!player) return;
-				player.stop();
-			});
-
-			socket.on('previous', (data: string) => {
-				const player = container.manager.players.get(data);
-				if (!player || !player.queue.previous) return;
-				player.queue.unshift(player.queue.previous);
-				player.stop();
-			});
-
-			socket.on('volume', (data: { id: string; volume: string }) => {
-				const player = container.manager.players.get(data.id);
-				if (!player) return;
-				player.setVolume(parseInt(data.volume, 10));
-			});
-		});
+		AudioSocket(container);
 
 		await createConnection({
 			type: 'postgres',
