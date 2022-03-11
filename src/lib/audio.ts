@@ -64,7 +64,7 @@ export function AudioSocket(container: Container) {
 
 		socket.on('playback', async (data: { id: string; uid: string }) => {
 			const player = container.manager.players.get(data.id);
-			if (!player) return;
+			if (!player || !player.queue.current) return;
 			const user = await container.client.users.fetch(data.uid);
 			const channel = container.client.channels.cache.get(player.textChannel!) as TextChannel;
 
