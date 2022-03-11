@@ -28,10 +28,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		try {
 			switch (filters) {
 				case '8d':
-					this.container.context.set(message.guild!.id, {
-						filter: '8d'
-					});
-
+					player.set('filter', '8d');
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id,
@@ -44,10 +41,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					return send(message, 'Filter `8d` applied!');
 
 				case 'pop':
-					this.container.context.set(message.guild!.id, {
-						filter: 'pop'
-					});
-
+					player.set('filter', 'pop');
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id,
@@ -73,10 +67,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					return send(message, 'Filter `pop` applied!');
 
 				case 'nightcore':
-					this.container.context.set(message.guild!.id, {
-						filter: 'nightcore'
-					});
-
+					player.set('filter', 'nightcore');
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id,
@@ -90,10 +81,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					await this.sleep(5000);
 					return send(message, 'Filter `nightcore` applied!');
 				case 'bassboost':
-					this.container.context.set(message.guild!.id, {
-						filter: 'bassboost'
-					});
-
+					player.set('filter', 'bassboost');
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id,
@@ -119,10 +107,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					return message.channel.send('Filter `bassboost` applied!');
 
 				case 'vaporwave':
-					this.container.context.set(message.guild!.id, {
-						filter: 'vaporwave'
-					});
-
+					player.set('filter', 'vaporwave');
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id,
@@ -140,10 +125,7 @@ export class UserCommand extends SubCommandPluginCommand {
 				case 'clear':
 				case 'remove':
 				case 'off':
-					this.container.context.set(message.guild!.id, {
-						filter: null
-					});
-
+					player.set('filter', null);
 					await player.node.send({
 						op: 'filters',
 						guildId: message.guild!.id
@@ -152,14 +134,14 @@ export class UserCommand extends SubCommandPluginCommand {
 					await this.sleep(5000);
 					return send(message, 'Filter has been cleared!');
 				default:
-					const context = this.container.context.get(message.guild!.id);
+					const context = player.get<string | null>('filter');
 					const eb = this.container
 						.embed()
 						.setAuthor({ name: message.guild?.name!, iconURL: message.guild?.iconURL()! })
 						.addFields(
 							filterList.map((filter) => ({
 								name: filter,
-								value: context && context.filter === filter ? ':white_check_mark:' : ':x:',
+								value: context === filter ? ':white_check_mark:' : ':x:',
 								inline: true
 							}))
 						)

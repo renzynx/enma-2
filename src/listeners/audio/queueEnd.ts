@@ -35,7 +35,6 @@ export class UserEvent extends Listener {
 			return channel && channel.send('Queue has ended');
 		}
 		channel && channel.send('Queue has ended, i hope you enjoyed the session!');
-		container.context.delete(player.guild);
-		return player.destroy();
+		return player.set('filter', null);
 	}
 }

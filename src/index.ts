@@ -20,7 +20,6 @@ import { AudioSocket } from './lib/audio';
 declare module '@sapphire/pieces' {
 	interface Container {
 		config: Collection<string, GuildConfig>;
-		context: Collection<string, any>;
 		current: Collection<string, CustomTrack>;
 		manager: Manager;
 		node: Node;
@@ -33,7 +32,6 @@ declare module '@sapphire/pieces' {
 
 container.boat = new BoatClient(process.env.BOAT_TOKEN!);
 container.config = new Collection();
-container.context = new Collection();
 container.current = new Collection();
 container.getPlayer = (message) => container.manager.players.get(message.guild?.id!);
 container.embed = (data) => new MessageEmbed(data);
