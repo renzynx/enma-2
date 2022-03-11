@@ -4,15 +4,18 @@ import type { TextChannel, VoiceState } from 'discord.js';
 
 @ApplyOptions<ListenerOptions>({})
 export class UserEvent extends Listener {
-	public run(oldState: VoiceState, newState: VoiceState) {
-		const player = this.container.manager.players.get(oldState.guild.id);
+	public async run(oldState: VoiceState, newState: VoiceState) {
+		const [player, stay] = await Promise.all([
+			this.container.manager.players.get(oldState.guild.id),
+			this.container.config.get(oldState.guild.id)?.stay
+		]);
 		if (oldState.channelId !== oldState.guild.me?.voice.channelId || newState.channel) {
 			if (player?.paused) player.pause(false);
 		}
 
 		if (oldState.channel?.members.size === 1) {
 			if (player) player.pause(true);
-
+			if (stay) return;
 			setTimeout(async () => {
 				if (oldState.channel?.members.size === 1) {
 					if (player) {
